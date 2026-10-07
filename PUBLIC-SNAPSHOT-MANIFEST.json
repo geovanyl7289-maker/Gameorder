@@ -1,0 +1,857 @@
+{
+  "public_scope": "Complete current-version source, tests, build scripts and exact historical snapshots.",
+  "latest_binary_version": "1.9.1",
+  "latest_source_included": true,
+  "original_git_history_included": false,
+  "license_added": true,
+  "snapshots": [
+    {
+      "version": "1.8.0",
+      "original_archive": "Gameorder-1.8.0-source.zip",
+      "original_archive_sha256": "ED037C8FFA14A62721CCF98F897E616B6ECFE12D9A403DE172DFECDA9D3DA4BB",
+      "archive_crc_valid": true,
+      "code_version_unchanged": true,
+      "snapshot_directory": "history/v1.8.0",
+      "imported_files": [
+        {
+          "path": "README.md",
+          "sha256": "58A0C04FB9E92A85C7E8767D7FB12D5593AD77EDB927BA82B29342512F8A8043",
+          "bytes": 4767
+        },
+        {
+          "path": "CHANGELOG.md",
+          "sha256": "7D0C85420904AA30281A78012E923591BC6C293451AD9402D510BCD1CC5B53E7",
+          "bytes": 1282
+        },
+        {
+          "path": ".gitignore",
+          "sha256": "B6301E7328E31985B5207E9F73C885092610C792E43B3FB7E2B18CEE2BCDE008",
+          "bytes": 799
+        },
+        {
+          "path": ".gitattributes",
+          "sha256": "CFDE50A527F71D38990777E283666DDBE12DB62958EE65D0A04086CAF2B3ABC5",
+          "bytes": 384
+        },
+        {
+          "path": "上传GitHub.md",
+          "sha256": "C6108A1D0BE1F745D5AD4648266B3C32E07CE36B85308FB941E0EBDFF35297A9",
+          "bytes": 2676
+        },
+        {
+          "path": "Build.ps1",
+          "sha256": "6C54232C5D8AD4D58C0255B1F1743958622436227FCAA1D026904B640524EB46",
+          "bytes": 569
+        },
+        {
+          "path": "GenerateIcon.py",
+          "sha256": "E90C6A4C0DC2DDB7AF86FA50C1627A932A856EBA12AAC8657EC5E6C22E89C484",
+          "bytes": 995
+        },
+        {
+          "path": "使用说明.md",
+          "sha256": "451191EEF1066BA5EF66C86EE6ED712A18542C83B65DBE26BBD6D27412A62211",
+          "bytes": 6863
+        },
+        {
+          "path": "启动演示.cmd",
+          "sha256": "5CD5CBF214BA95FB2D03384A069A558234224A58BB7FAB905B4C7078D6300B46",
+          "bytes": 47
+        },
+        {
+          "path": "docs/RELEASE_TEMPLATE.md",
+          "sha256": "692103C9BD6AB1189E7CFC001D5A52A8F97EB60D1383145BF0BF137C749BDA42",
+          "bytes": 1331
+        },
+        {
+          "path": "docs/images/accounts-demo.png",
+          "sha256": "4D28F47416CE38B39DABCB33541580D22C0631629B1C3008770CE980C864FCC7",
+          "bytes": 80679
+        },
+        {
+          "path": "docs/images/about-demo.png",
+          "sha256": "C1D52F23B6806106F93877FE0D3158F64FBE55A3DD66CDDBE00D236A7C8E09BF",
+          "bytes": 91429
+        },
+        {
+          "path": "src/AboutInfo.cs",
+          "sha256": "3AFEB42B4D29E4B559F0ED11BDB9B21718A1A8879B7C3E86D30C71F95EBA5D40",
+          "bytes": 1449
+        },
+        {
+          "path": "src/app.manifest",
+          "sha256": "5C4CF68A3B11C704791404660CB558BC74FC5A4B2303C0436B05219C3C7D8117",
+          "bytes": 875
+        },
+        {
+          "path": "src/App.xaml",
+          "sha256": "17A5FFE361B1AB557D5BEE6A4464D55BEE5DC93B0909950E4D005928D31EAFD7",
+          "bytes": 201
+        },
+        {
+          "path": "src/App.xaml.cs",
+          "sha256": "A282CF2F2A696E50EBC8E12708E7A2541ED3D16C9303F18D3260C0BF3C1314CA",
+          "bytes": 13286
+        },
+        {
+          "path": "src/AvatarImageConverter.cs",
+          "sha256": "8891FEFE4384D7C8CF1BCEF87007686BC0C65BB95E7F084E3EB574E0400DC8AA",
+          "bytes": 1851
+        },
+        {
+          "path": "src/AvatarService.cs",
+          "sha256": "B6E37C89DDD013951916784BE1CDD0E028BD3D6F7D2EFA68557C9FCC90C67062",
+          "bytes": 21127
+        },
+        {
+          "path": "src/Commands.cs",
+          "sha256": "D1F186FCA53AD2760605D9B4ACE89964B521DF401B59523DD6FC0AB561EE2194",
+          "bytes": 1571
+        },
+        {
+          "path": "src/Gameorder.csproj",
+          "sha256": "45E9A131A743BD04983CA75F5A40A982B427AE5E54D6DCBEC2295DE08D5F12EA",
+          "bytes": 1006
+        },
+        {
+          "path": "src/GlobalUsings.cs",
+          "sha256": "9EB56B713F4BD450C169F140E74FF7B6D5E456F3742A30188B947223D01628E4",
+          "bytes": 24
+        },
+        {
+          "path": "src/InstanceMessageService.cs",
+          "sha256": "DAF30D48FF2A00A382618DD6F0ABFE959D0DBDF112428915036FF9C6DCE0B0A4",
+          "bytes": 7412
+        },
+        {
+          "path": "src/LocalStore.cs",
+          "sha256": "67EBB702D656168A090D659C4BC2C1C9AB89355135C7D3091696224DDCD430A0",
+          "bytes": 8350
+        },
+        {
+          "path": "src/MainViewModel.cs",
+          "sha256": "1EBE0DB94ADB9F92F6D8BD8D7F1F4FB520E13322BFAD50552FE7950FE5834A63",
+          "bytes": 37043
+        },
+        {
+          "path": "src/MainWindow.xaml",
+          "sha256": "B275B7A5B1EEFB4631782973A5FD372D3BDA621158048FD0DB6890D11A451335",
+          "bytes": 78939
+        },
+        {
+          "path": "src/MainWindow.xaml.cs",
+          "sha256": "DF57D1446240D792E9D8C7B3E0C621E9FE27502845FFA0B33AB28503ACE736BE",
+          "bytes": 16456
+        },
+        {
+          "path": "src/Models.cs",
+          "sha256": "AAAF29E2944FE1DEEAA3A8A28CC17C36148C699A76DFBDF2AB9C060B66033166",
+          "bytes": 6028
+        },
+        {
+          "path": "src/QuickAccountWindow.xaml",
+          "sha256": "015C3BD6AF502EE969C227AA69DB3A29CB8A9B78B8E75D7165BA0E688BBE7960",
+          "bytes": 21326
+        },
+        {
+          "path": "src/QuickAccountWindow.xaml.cs",
+          "sha256": "B4F84596FF00C63768BFA4670342A7A01CBE7B9ACCF0220FBEC7073F96061C0E",
+          "bytes": 10416
+        },
+        {
+          "path": "src/ShellIdentity.cs",
+          "sha256": "881E73F18883A4C84F394B3E3A5C3057E52415247F30E932D8C47124E0CA5A12",
+          "bytes": 636
+        },
+        {
+          "path": "src/SteamService.cs",
+          "sha256": "D94DD9B9A104CF5B9FF0EAB046E241BFEF31F269DA826BBFF207DD0278EDF0BA",
+          "bytes": 28364
+        },
+        {
+          "path": "src/SteamSessionService.cs",
+          "sha256": "7D6CF2F14188C21AC3D9AD33200C4D141BB223BCF9E9374707F7C50F743FC9A2",
+          "bytes": 8582
+        },
+        {
+          "path": "src/TaskbarAccountWidget.xaml",
+          "sha256": "561E392144C6CAAE816CB8D9DD7FBFD3039FBDC58B93622942AC87426AE5DAA2",
+          "bytes": 9974
+        },
+        {
+          "path": "src/TaskbarAccountWidget.xaml.cs",
+          "sha256": "7612FD6FC7358DF0DDCA30519622834652E02CAE9234F80AC30D9104BE61ED0B",
+          "bytes": 15574
+        },
+        {
+          "path": "src/TaskbarDockHint.cs",
+          "sha256": "1CB0241CC93ECF34AD4BD894FB13B01F4D68DE9B8F0AC4F568659122CFDD9242",
+          "bytes": 4912
+        },
+        {
+          "path": "src/TaskbarWidgetDockLayout.cs",
+          "sha256": "7FF909406FCF987808FFC0A24F550F07624BD4360A81C400585E482EF623D110",
+          "bytes": 4553
+        },
+        {
+          "path": "src/TaskbarWidgetHost.cs",
+          "sha256": "8F6E46FED114229E43DDC05A627466F09D235CEB5E9DBC355767F37B8581C325",
+          "bytes": 45191
+        },
+        {
+          "path": "src/TaskbarWidgetViewModel.cs",
+          "sha256": "41F8F791237EE54A02C9A99182455FB7F93D7E7DA329624B717BBBDE78AB0C2F",
+          "bytes": 5985
+        },
+        {
+          "path": "src/TrayService.cs",
+          "sha256": "E436F4362BC4370950DE1D025C3006BC0EB0C0AA555F3639FD7D9E53185CB084",
+          "bytes": 37612
+        },
+        {
+          "path": "src/UiVerification.cs",
+          "sha256": "2CF588A177D1161143314AB160069752195D6B49BF39FFD2EF0A6F6079FCC69F",
+          "bytes": 59225
+        },
+        {
+          "path": "src/ValveKeyValues.cs",
+          "sha256": "F9F16307B0FAB618DF5B3A288B17DE300BA6F56B1E521F6B2CF4DC022C40FF68",
+          "bytes": 8971
+        },
+        {
+          "path": "src/assets/Gameorder.png",
+          "sha256": "7599828B16CDA1A9C1D5DFCF69FF204200E90805C5218230837482CA210B1EE0",
+          "bytes": 14935
+        },
+        {
+          "path": "src/assets/Gameorder.ico",
+          "sha256": "AE91393DC049D8D54C8A3BE8360B609C503369042368C7C34C937E17D7F29219",
+          "bytes": 33133
+        },
+        {
+          "path": "src/assets/CreatorAvatar.png",
+          "sha256": "8C15DFDC8E51841328816A6B159FB459A4E59E9ED0CA153BA38C66E934722C0B",
+          "bytes": 1044547
+        },
+        {
+          "path": "tests/AccountGroups.Tests.cs",
+          "sha256": "71D04F0C1AB16C92770E2E259C632B3097E128E87E0EBFA356711095A301D445",
+          "bytes": 11999
+        },
+        {
+          "path": "tests/AvatarService.Tests.cs",
+          "sha256": "874026D960C0710793E0B57E49898B1C6585B5B10D69E2D9D8BE69B39A62E5A3",
+          "bytes": 19443
+        },
+        {
+          "path": "tests/Gameorder.Tests.csproj",
+          "sha256": "D1E4B57C2F02395876D733FF8E83DAC77A83871809E741C4EFC76BC7760C3D61",
+          "bytes": 860
+        },
+        {
+          "path": "tests/InstanceService.Tests.cs",
+          "sha256": "D837AB40383AE4CCD065BD4A3E8B1AF79E0924F29D321D76E81D28C77177CCFF",
+          "bytes": 9402
+        },
+        {
+          "path": "tests/Program.cs",
+          "sha256": "5FFCE30C7A5AD751FE78F65F411A809F11F10E0DD56B70A1E9BDF50DFD1D01AE",
+          "bytes": 22988
+        },
+        {
+          "path": "tests/SteamSession.Tests.cs",
+          "sha256": "1D619F952F6B79B89CDF1807497FF0EC7C3F16939027604645C157D295E90AE2",
+          "bytes": 6419
+        },
+        {
+          "path": "tests/TaskbarPreferences.Tests.cs",
+          "sha256": "207987277CCE6C46D2646998A63CCD4DC2D2A5EDF4C79878924D77BF66506283",
+          "bytes": 8538
+        },
+        {
+          "path": "SOURCE-MANIFEST.json",
+          "sha256": "2FD618C0620A2A9C38DE5710E5BBE2A9DAFB7707BDE232053D48B8E9D5CF51DC",
+          "bytes": 7004
+        }
+      ],
+      "stripped_build_entries": [],
+      "note": "Imported historical archive snapshot; not original Git commit history."
+    },
+    {
+      "version": "1.8.3",
+      "original_archive": "Gameorder-1.8.3-source.zip",
+      "original_archive_sha256": "58A47A6687345EE869018E9FBFC2FB9D99168060E69F34AAADF7495D4F998FFB",
+      "archive_crc_valid": true,
+      "code_version_unchanged": true,
+      "snapshot_directory": "history/v1.8.3",
+      "imported_files": [
+        {
+          "path": "README.md",
+          "sha256": "095F3520E2254AA22D4DAD13A9B04248C2C5D1C7926B8FA027C6109FACEEA686",
+          "bytes": 7862
+        },
+        {
+          "path": "CHANGELOG.md",
+          "sha256": "868ABAE2DAC6878C99496F9A9B0CB5D0823CD7DFC82F5234D867E84CDB23CD59",
+          "bytes": 4978
+        },
+        {
+          "path": ".gitignore",
+          "sha256": "B6301E7328E31985B5207E9F73C885092610C792E43B3FB7E2B18CEE2BCDE008",
+          "bytes": 799
+        },
+        {
+          "path": ".gitattributes",
+          "sha256": "CFDE50A527F71D38990777E283666DDBE12DB62958EE65D0A04086CAF2B3ABC5",
+          "bytes": 384
+        },
+        {
+          "path": "上传GitHub.md",
+          "sha256": "DADE6CBA08306DEBDAC9D0BE7EB26B08CEDE7EC06969BB306B64CC00C2DA816F",
+          "bytes": 2676
+        },
+        {
+          "path": "Build.ps1",
+          "sha256": "6C54232C5D8AD4D58C0255B1F1743958622436227FCAA1D026904B640524EB46",
+          "bytes": 569
+        },
+        {
+          "path": "GenerateIcon.py",
+          "sha256": "E90C6A4C0DC2DDB7AF86FA50C1627A932A856EBA12AAC8657EC5E6C22E89C484",
+          "bytes": 995
+        },
+        {
+          "path": "使用说明.md",
+          "sha256": "12F4E095F43EED50F0582F5F8B8D3C82378DFF1811A67A5119055A17A11E387A",
+          "bytes": 9500
+        },
+        {
+          "path": "启动演示.cmd",
+          "sha256": "5CD5CBF214BA95FB2D03384A069A558234224A58BB7FAB905B4C7078D6300B46",
+          "bytes": 47
+        },
+        {
+          "path": "docs/RELEASE_TEMPLATE.md",
+          "sha256": "5D92C35276E62ECBB6FDD0829378AA1813307612D67DDDBD00EDA61AC39FA998",
+          "bytes": 2242
+        },
+        {
+          "path": "docs/images/accounts-demo.png",
+          "sha256": "8DAC826BF1F85D0E846037A413F86209DD53365EC3B52BAC45FFD4766E748083",
+          "bytes": 81642
+        },
+        {
+          "path": "docs/images/about-demo.png",
+          "sha256": "C42F5E372910AA1AE755AF363FC91CADA473B1B020E97A06B2DEC05B42A251C9",
+          "bytes": 108431
+        },
+        {
+          "path": "docs/images/operation-records.png",
+          "sha256": "15A8BE76878898530B73C90D0AA8999050A4305CC11573E07D3E22E93FE0102B",
+          "bytes": 63240
+        },
+        {
+          "path": "src/AboutInfo.cs",
+          "sha256": "40EEEF56DDEFAA7B2CC83504805FA991391D5A4F7ACFF732650F8B8429F7E0A0",
+          "bytes": 5401
+        },
+        {
+          "path": "src/app.manifest",
+          "sha256": "5C4CF68A3B11C704791404660CB558BC74FC5A4B2303C0436B05219C3C7D8117",
+          "bytes": 875
+        },
+        {
+          "path": "src/App.xaml",
+          "sha256": "17A5FFE361B1AB557D5BEE6A4464D55BEE5DC93B0909950E4D005928D31EAFD7",
+          "bytes": 201
+        },
+        {
+          "path": "src/App.xaml.cs",
+          "sha256": "A282CF2F2A696E50EBC8E12708E7A2541ED3D16C9303F18D3260C0BF3C1314CA",
+          "bytes": 13286
+        },
+        {
+          "path": "src/AvatarImageConverter.cs",
+          "sha256": "8891FEFE4384D7C8CF1BCEF87007686BC0C65BB95E7F084E3EB574E0400DC8AA",
+          "bytes": 1851
+        },
+        {
+          "path": "src/AvatarService.cs",
+          "sha256": "B6E37C89DDD013951916784BE1CDD0E028BD3D6F7D2EFA68557C9FCC90C67062",
+          "bytes": 21127
+        },
+        {
+          "path": "src/Commands.cs",
+          "sha256": "D1F186FCA53AD2760605D9B4ACE89964B521DF401B59523DD6FC0AB561EE2194",
+          "bytes": 1571
+        },
+        {
+          "path": "src/GameBackgroundPolicy.cs",
+          "sha256": "BCEB21A90A6704BB76831399D0CC26B0781DC7CFD0E4DA625F67341CD6F8B890",
+          "bytes": 1254
+        },
+        {
+          "path": "src/Gameorder.csproj",
+          "sha256": "3DEC19F1D8C1674F3689BD87369D0BE0C515C196981080D75EC86238FF3B2F79",
+          "bytes": 1030
+        },
+        {
+          "path": "src/GlobalUsings.cs",
+          "sha256": "9EB56B713F4BD450C169F140E74FF7B6D5E456F3742A30188B947223D01628E4",
+          "bytes": 24
+        },
+        {
+          "path": "src/InstanceMessageService.cs",
+          "sha256": "DAF30D48FF2A00A382618DD6F0ABFE959D0DBDF112428915036FF9C6DCE0B0A4",
+          "bytes": 7412
+        },
+        {
+          "path": "src/LocalStore.cs",
+          "sha256": "80A7FD04E921F7B7C42361E680E388850661576CF337F3026143B1F60CE30BCF",
+          "bytes": 8502
+        },
+        {
+          "path": "src/MainViewModel.cs",
+          "sha256": "311BC3F236F58EF9564663CF0AE4A584BD4A0DF77CE42945CFB81BF23F964F72",
+          "bytes": 51391
+        },
+        {
+          "path": "src/MainWindow.xaml",
+          "sha256": "A8A29AFF462568547E71BC90578296736B687A283CC35EF7DF610216E0F667CF",
+          "bytes": 90157
+        },
+        {
+          "path": "src/MainWindow.xaml.cs",
+          "sha256": "ED167AEB165E985862B7E17B8BAB7F237D36A490ECEC516E51BB551557FE8512",
+          "bytes": 17272
+        },
+        {
+          "path": "src/Models.cs",
+          "sha256": "C01420EE4429905626F59F90744438C0DEDFF6E067ED59C6C327AD0C14A099DD",
+          "bytes": 7262
+        },
+        {
+          "path": "src/OperationLogService.cs",
+          "sha256": "6A3A29C0C60087ED145C7853F98AD7B88611A7630E2B20E0E394861850F8BC9A",
+          "bytes": 3808
+        },
+        {
+          "path": "src/ProcessEfficiencyService.cs",
+          "sha256": "62A92DBF7561666B6174047761110F642C9F8E5470076DEA9679F18AEA1B60E3",
+          "bytes": 8420
+        },
+        {
+          "path": "src/QuickAccountWindow.xaml",
+          "sha256": "9B820AC8EF7837BFDB759D17B27023A4619516EB559690A60EB03C5062570068",
+          "bytes": 21656
+        },
+        {
+          "path": "src/QuickAccountWindow.xaml.cs",
+          "sha256": "B4F84596FF00C63768BFA4670342A7A01CBE7B9ACCF0220FBEC7073F96061C0E",
+          "bytes": 10416
+        },
+        {
+          "path": "src/ShellIdentity.cs",
+          "sha256": "881E73F18883A4C84F394B3E3A5C3057E52415247F30E932D8C47124E0CA5A12",
+          "bytes": 636
+        },
+        {
+          "path": "src/SteamGameService.cs",
+          "sha256": "8D712F3BE6E3FFB9E1933E923A1D2B242E76672655679DDEF331F826CC87D388",
+          "bytes": 18998
+        },
+        {
+          "path": "src/SteamService.cs",
+          "sha256": "D94DD9B9A104CF5B9FF0EAB046E241BFEF31F269DA826BBFF207DD0278EDF0BA",
+          "bytes": 28364
+        },
+        {
+          "path": "src/SteamSessionService.cs",
+          "sha256": "906223FB9DFAF693959A430415DF706C9086E18BBE3CD88F4704F76E5424E8AD",
+          "bytes": 21711
+        },
+        {
+          "path": "src/TaskbarAccountWidget.xaml",
+          "sha256": "561E392144C6CAAE816CB8D9DD7FBFD3039FBDC58B93622942AC87426AE5DAA2",
+          "bytes": 9974
+        },
+        {
+          "path": "src/TaskbarAccountWidget.xaml.cs",
+          "sha256": "7612FD6FC7358DF0DDCA30519622834652E02CAE9234F80AC30D9104BE61ED0B",
+          "bytes": 15574
+        },
+        {
+          "path": "src/TaskbarDockHint.cs",
+          "sha256": "1CB0241CC93ECF34AD4BD894FB13B01F4D68DE9B8F0AC4F568659122CFDD9242",
+          "bytes": 4912
+        },
+        {
+          "path": "src/TaskbarWidgetDockLayout.cs",
+          "sha256": "7FF909406FCF987808FFC0A24F550F07624BD4360A81C400585E482EF623D110",
+          "bytes": 4553
+        },
+        {
+          "path": "src/TaskbarWidgetHost.cs",
+          "sha256": "539C2A951770EC775569986B2D307496B85687BD09FB0203A45941E871CA15C3",
+          "bytes": 55426
+        },
+        {
+          "path": "src/TaskbarWidgetViewModel.cs",
+          "sha256": "46CE5A66FED4CD3C0AD668704696B45EE6FF0893362676BF5733E0B107520B03",
+          "bytes": 7518
+        },
+        {
+          "path": "src/TrayService.cs",
+          "sha256": "96D01C3BEEBBD8CA758D48C35F110F80964C1DC71E684D49141BC6809F4B6AA0",
+          "bytes": 42653
+        },
+        {
+          "path": "src/UiVerification.cs",
+          "sha256": "4FA5B24E4FAFE0CCAF437953A0239C3B50894B10D86F75C4CB18986CB96A8FD0",
+          "bytes": 89449
+        },
+        {
+          "path": "src/ValveKeyValues.cs",
+          "sha256": "F9F16307B0FAB618DF5B3A288B17DE300BA6F56B1E521F6B2CF4DC022C40FF68",
+          "bytes": 8971
+        },
+        {
+          "path": "src/assets/Gameorder.png",
+          "sha256": "7599828B16CDA1A9C1D5DFCF69FF204200E90805C5218230837482CA210B1EE0",
+          "bytes": 14935
+        },
+        {
+          "path": "src/assets/Gameorder.ico",
+          "sha256": "AE91393DC049D8D54C8A3BE8360B609C503369042368C7C34C937E17D7F29219",
+          "bytes": 33133
+        },
+        {
+          "path": "src/assets/CreatorAvatar.png",
+          "sha256": "8C15DFDC8E51841328816A6B159FB459A4E59E9ED0CA153BA38C66E934722C0B",
+          "bytes": 1044547
+        },
+        {
+          "path": "tests/AccountGroups.Tests.cs",
+          "sha256": "71D04F0C1AB16C92770E2E259C632B3097E128E87E0EBFA356711095A301D445",
+          "bytes": 11999
+        },
+        {
+          "path": "tests/AvatarService.Tests.cs",
+          "sha256": "874026D960C0710793E0B57E49898B1C6585B5B10D69E2D9D8BE69B39A62E5A3",
+          "bytes": 19443
+        },
+        {
+          "path": "tests/GameBackgroundPolicy.Tests.cs",
+          "sha256": "9B8FD2EB7EB80DCDEF01456F2E6F2EE1CAFF67B6EF90A1368F08ED609781A914",
+          "bytes": 3178
+        },
+        {
+          "path": "tests/Gameorder.Tests.csproj",
+          "sha256": "12AE1BB256B39F48A597A90EF7D95BC82CBD1328DFF5A79CF8057302A0CB10B1",
+          "bytes": 1213
+        },
+        {
+          "path": "tests/InstanceService.Tests.cs",
+          "sha256": "D837AB40383AE4CCD065BD4A3E8B1AF79E0924F29D321D76E81D28C77177CCFF",
+          "bytes": 9402
+        },
+        {
+          "path": "tests/OperationLog.Tests.cs",
+          "sha256": "79324434CB941D601CC8CFC2719BAAA7128B9ED086A191344A742CEC9616BAF2",
+          "bytes": 12232
+        },
+        {
+          "path": "tests/ProcessEfficiency.Tests.cs",
+          "sha256": "9C8361B9B7EDA8F445EF3A430F02B8563D6D91E715F22960D2ACF64E3778CB99",
+          "bytes": 6283
+        },
+        {
+          "path": "tests/Program.cs",
+          "sha256": "9C840286048A04F1173532081B38F410081585C78A886DF43AE0021543F2DC9C",
+          "bytes": 23160
+        },
+        {
+          "path": "tests/SteamGame.Tests.cs",
+          "sha256": "7974C1D753E36DA5907277A9EF59D0CB6A3744F473D69B0DA566579579780EF2",
+          "bytes": 21520
+        },
+        {
+          "path": "tests/SteamSession.Tests.cs",
+          "sha256": "2C8096E302E15B71F9C1C085DFC751320CC9D16EF8BD602D78DCBC401B697326",
+          "bytes": 13412
+        },
+        {
+          "path": "tests/TaskbarPreferences.Tests.cs",
+          "sha256": "207987277CCE6C46D2646998A63CCD4DC2D2A5EDF4C79878924D77BF66506283",
+          "bytes": 8538
+        },
+        {
+          "path": "SOURCE-MANIFEST.json",
+          "sha256": "E9A87F979CF255B4DBF31B2AF4AFA6D57E02B3268C8A81D133D256D5699EC77F",
+          "bytes": 8288
+        }
+      ],
+      "stripped_build_entries": [],
+      "note": "Imported historical archive snapshot; not original Git commit history."
+    },
+    {
+      "version": "1.8.5",
+      "original_archive": "Gameorder-1.8.5-source.zip",
+      "original_archive_sha256": "F78999DF520F6183F993EA999BD87052202E2E4A493B1CE8E0F739CB8826EBB4",
+      "archive_crc_valid": true,
+      "code_version_unchanged": true,
+      "snapshot_directory": "history/v1.8.5",
+      "imported_files": [
+        {
+          "path": "Build.ps1",
+          "sha256": "6C54232C5D8AD4D58C0255B1F1743958622436227FCAA1D026904B640524EB46",
+          "bytes": 569
+        },
+        {
+          "path": "README.md",
+          "sha256": "5DC8C3966AE28FB7D73840226057CB03429C77F221CB3DECDFFF247CFFD64DD9",
+          "bytes": 8827
+        },
+        {
+          "path": "src/AboutInfo.cs",
+          "sha256": "CCA8170E329B7A19CD81A86FB38643336E78B8FBEA6F8FD123E15E994985CB44",
+          "bytes": 6413
+        },
+        {
+          "path": "src/app.manifest",
+          "sha256": "5C4CF68A3B11C704791404660CB558BC74FC5A4B2303C0436B05219C3C7D8117",
+          "bytes": 875
+        },
+        {
+          "path": "src/App.xaml",
+          "sha256": "17A5FFE361B1AB557D5BEE6A4464D55BEE5DC93B0909950E4D005928D31EAFD7",
+          "bytes": 201
+        },
+        {
+          "path": "src/App.xaml.cs",
+          "sha256": "A282CF2F2A696E50EBC8E12708E7A2541ED3D16C9303F18D3260C0BF3C1314CA",
+          "bytes": 13286
+        },
+        {
+          "path": "src/assets/CreatorAvatar.png",
+          "sha256": "8C15DFDC8E51841328816A6B159FB459A4E59E9ED0CA153BA38C66E934722C0B",
+          "bytes": 1044547
+        },
+        {
+          "path": "src/assets/Gameorder.ico",
+          "sha256": "AE91393DC049D8D54C8A3BE8360B609C503369042368C7C34C937E17D7F29219",
+          "bytes": 33133
+        },
+        {
+          "path": "src/assets/Gameorder.png",
+          "sha256": "7599828B16CDA1A9C1D5DFCF69FF204200E90805C5218230837482CA210B1EE0",
+          "bytes": 14935
+        },
+        {
+          "path": "src/AvatarImageConverter.cs",
+          "sha256": "72AD89BEA30376B845F36D3FFBA48E4B271EE95D4D5DB98A09198397AF2B2B7A",
+          "bytes": 2121
+        },
+        {
+          "path": "src/AvatarService.cs",
+          "sha256": "B6E37C89DDD013951916784BE1CDD0E028BD3D6F7D2EFA68557C9FCC90C67062",
+          "bytes": 21127
+        },
+        {
+          "path": "src/Commands.cs",
+          "sha256": "D1F186FCA53AD2760605D9B4ACE89964B521DF401B59523DD6FC0AB561EE2194",
+          "bytes": 1571
+        },
+        {
+          "path": "src/GameBackgroundPolicy.cs",
+          "sha256": "BCEB21A90A6704BB76831399D0CC26B0781DC7CFD0E4DA625F67341CD6F8B890",
+          "bytes": 1254
+        },
+        {
+          "path": "src/Gameorder.csproj",
+          "sha256": "F332F211F8C9F20B45D8CA2A3FC88B75C2840D121969D405AC6078999C887074",
+          "bytes": 1030
+        },
+        {
+          "path": "src/GlobalUsings.cs",
+          "sha256": "9EB56B713F4BD450C169F140E74FF7B6D5E456F3742A30188B947223D01628E4",
+          "bytes": 24
+        },
+        {
+          "path": "src/InstanceMessageService.cs",
+          "sha256": "DAF30D48FF2A00A382618DD6F0ABFE959D0DBDF112428915036FF9C6DCE0B0A4",
+          "bytes": 7412
+        },
+        {
+          "path": "src/LocalStore.cs",
+          "sha256": "80A7FD04E921F7B7C42361E680E388850661576CF337F3026143B1F60CE30BCF",
+          "bytes": 8502
+        },
+        {
+          "path": "src/MainViewModel.cs",
+          "sha256": "311BC3F236F58EF9564663CF0AE4A584BD4A0DF77CE42945CFB81BF23F964F72",
+          "bytes": 51391
+        },
+        {
+          "path": "src/MainWindow.xaml",
+          "sha256": "78F0CDD418FC964D3DB51305F3BC77B078343DF8705AAE603CAFE2F1BFD32589",
+          "bytes": 90277
+        },
+        {
+          "path": "src/MainWindow.xaml.cs",
+          "sha256": "31C572C603EC046C92DB09D22AB938E77B8841366A5392E91F8B3E51C6A1AF22",
+          "bytes": 23609
+        },
+        {
+          "path": "src/Models.cs",
+          "sha256": "C01420EE4429905626F59F90744438C0DEDFF6E067ED59C6C327AD0C14A099DD",
+          "bytes": 7262
+        },
+        {
+          "path": "src/OperationLogService.cs",
+          "sha256": "6A3A29C0C60087ED145C7853F98AD7B88611A7630E2B20E0E394861850F8BC9A",
+          "bytes": 3808
+        },
+        {
+          "path": "src/ProcessEfficiencyService.cs",
+          "sha256": "139A3330A0539EDE0594C8C6BB6874431267454CB6AEA46D5D0D9F7795EB0C8D",
+          "bytes": 11813
+        },
+        {
+          "path": "src/QuickAccountWindow.xaml",
+          "sha256": "9B820AC8EF7837BFDB759D17B27023A4619516EB559690A60EB03C5062570068",
+          "bytes": 21656
+        },
+        {
+          "path": "src/QuickAccountWindow.xaml.cs",
+          "sha256": "B4F84596FF00C63768BFA4670342A7A01CBE7B9ACCF0220FBEC7073F96061C0E",
+          "bytes": 10416
+        },
+        {
+          "path": "src/ShellIdentity.cs",
+          "sha256": "881E73F18883A4C84F394B3E3A5C3057E52415247F30E932D8C47124E0CA5A12",
+          "bytes": 636
+        },
+        {
+          "path": "src/SteamGameService.cs",
+          "sha256": "76EBBE965602637C058557F27689F99FEB9944C815E33B806DB5DF6D856C27E3",
+          "bytes": 21328
+        },
+        {
+          "path": "src/SteamService.cs",
+          "sha256": "D94DD9B9A104CF5B9FF0EAB046E241BFEF31F269DA826BBFF207DD0278EDF0BA",
+          "bytes": 28364
+        },
+        {
+          "path": "src/SteamSessionService.cs",
+          "sha256": "906223FB9DFAF693959A430415DF706C9086E18BBE3CD88F4704F76E5424E8AD",
+          "bytes": 21711
+        },
+        {
+          "path": "src/TaskbarAccountWidget.xaml",
+          "sha256": "561E392144C6CAAE816CB8D9DD7FBFD3039FBDC58B93622942AC87426AE5DAA2",
+          "bytes": 9974
+        },
+        {
+          "path": "src/TaskbarAccountWidget.xaml.cs",
+          "sha256": "8F6DD7EBBEF3D55A07C954B918ABC3CC628BDA0379A9017023454E90681BFEDE",
+          "bytes": 16130
+        },
+        {
+          "path": "src/TaskbarDockHint.cs",
+          "sha256": "1CB0241CC93ECF34AD4BD894FB13B01F4D68DE9B8F0AC4F568659122CFDD9242",
+          "bytes": 4912
+        },
+        {
+          "path": "src/TaskbarWidgetDockLayout.cs",
+          "sha256": "7FF909406FCF987808FFC0A24F550F07624BD4360A81C400585E482EF623D110",
+          "bytes": 4553
+        },
+        {
+          "path": "src/TaskbarWidgetHost.cs",
+          "sha256": "D480AAC0F833A4028FBEC6D324D54E00BD0ABA59C03E6276C464175A6C6EF8A3",
+          "bytes": 53982
+        },
+        {
+          "path": "src/TaskbarWidgetViewModel.cs",
+          "sha256": "46CE5A66FED4CD3C0AD668704696B45EE6FF0893362676BF5733E0B107520B03",
+          "bytes": 7518
+        },
+        {
+          "path": "src/TrayService.cs",
+          "sha256": "96D01C3BEEBBD8CA758D48C35F110F80964C1DC71E684D49141BC6809F4B6AA0",
+          "bytes": 42653
+        },
+        {
+          "path": "src/UiVerification.cs",
+          "sha256": "2290EB620E6411C1A8ABEBA7254B152363DC279FE18201176D60E7710F8A5EB7",
+          "bytes": 114883
+        },
+        {
+          "path": "src/ValveKeyValues.cs",
+          "sha256": "F9F16307B0FAB618DF5B3A288B17DE300BA6F56B1E521F6B2CF4DC022C40FF68",
+          "bytes": 8971
+        },
+        {
+          "path": "tests/AccountGroups.Tests.cs",
+          "sha256": "71D04F0C1AB16C92770E2E259C632B3097E128E87E0EBFA356711095A301D445",
+          "bytes": 11999
+        },
+        {
+          "path": "tests/AvatarService.Tests.cs",
+          "sha256": "874026D960C0710793E0B57E49898B1C6585B5B10D69E2D9D8BE69B39A62E5A3",
+          "bytes": 19443
+        },
+        {
+          "path": "tests/GameBackgroundPolicy.Tests.cs",
+          "sha256": "9B8FD2EB7EB80DCDEF01456F2E6F2EE1CAFF67B6EF90A1368F08ED609781A914",
+          "bytes": 3178
+        },
+        {
+          "path": "tests/Gameorder.Tests.csproj",
+          "sha256": "12AE1BB256B39F48A597A90EF7D95BC82CBD1328DFF5A79CF8057302A0CB10B1",
+          "bytes": 1213
+        },
+        {
+          "path": "tests/InstanceService.Tests.cs",
+          "sha256": "D837AB40383AE4CCD065BD4A3E8B1AF79E0924F29D321D76E81D28C77177CCFF",
+          "bytes": 9402
+        },
+        {
+          "path": "tests/OperationLog.Tests.cs",
+          "sha256": "79324434CB941D601CC8CFC2719BAAA7128B9ED086A191344A742CEC9616BAF2",
+          "bytes": 12232
+        },
+        {
+          "path": "tests/ProcessEfficiency.Tests.cs",
+          "sha256": "CFAA178DE9D0C4F1BA63309284055C09756FACFC2C8A0CD9B01AAA3603A13441",
+          "bytes": 11009
+        },
+        {
+          "path": "tests/Program.cs",
+          "sha256": "9C840286048A04F1173532081B38F410081585C78A886DF43AE0021543F2DC9C",
+          "bytes": 23160
+        },
+        {
+          "path": "tests/SteamGame.Tests.cs",
+          "sha256": "D37C9FD944D1424B1D85A0C0339D6F929E549D36CA5BE8DE1FA7CD6D5089BA09",
+          "bytes": 24132
+        },
+        {
+          "path": "tests/SteamSession.Tests.cs",
+          "sha256": "2C8096E302E15B71F9C1C085DFC751320CC9D16EF8BD602D78DCBC401B697326",
+          "bytes": 13412
+        },
+        {
+          "path": "tests/TaskbarPreferences.Tests.cs",
+          "sha256": "207987277CCE6C46D2646998A63CCD4DC2D2A5EDF4C79878924D77BF66506283",
+          "bytes": 8538
+        }
+      ],
+      "stripped_build_entries": [],
+      "note": "Imported historical archive snapshot; not original Git commit history."
+    }
+  ],
+  "license": "GPL-3.0-only",
+  "latest_source_directory": "src"
+}

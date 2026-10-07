@@ -1,0 +1,84 @@
+name: Windows build and isolated tests
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: pwsh
+    env:
+      DOTNET_NOLOGO: 'true'
+      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 'true'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: '9.0.314'
+      - name: Prepare a disposable development test root
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if (Test-Path -LiteralPath 'H:\') { throw 'H: is occupied; do not change an existing drive.' }
+          $ciDiskRoot = Join-Path $env:RUNNER_TEMP 'Gameorder-ci-disk'
+          New-Item -ItemType Directory -Path $ciDiskRoot | Out-Null
+          subst.exe H: $ciDiskRoot
+          if ($LASTEXITCODE -ne 0) { throw 'Could not create an isolated H: mapping.' }
+          $ciWorkRoot = 'H:\Documents\Playground\Gameorder'
+          New-Item -ItemType Directory -Path $ciWorkRoot -Force | Out-Null
+          foreach ($name in @('src','tests','Build.ps1','LICENSE','README.md','SECURITY.md','CHANGELOG.md','使用说明.md','THIRD-PARTY.md','third-party')) {
+            Copy-Item -LiteralPath (Join-Path $env:GITHUB_WORKSPACE $name) -Destination $ciWorkRoot -Recurse
+          }
+          "GAMEORDER_CI_ROOT=$ciWorkRoot" >> $env:GITHUB_ENV
+      - name: Build the formal application
+        working-directory: H:\Documents\Playground\Gameorder
+        run: |
+          dotnet build .\src\Gameorder.csproj -c Release -p:ResetTestBuild=false
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Run isolated core checks
+        working-directory: H:\Documents\Playground\Gameorder
+        run: |
+          dotnet run --project .\tests\Gameorder.Tests.csproj -c Release
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Run Windows DPAPI and password-storage checks
+        working-directory: H:\Documents\Playground\Gameorder
+        run: |
+          dotnet build .\tests\security-storage\SecurityStorage.csproj -c Release
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          dotnet 'H:\Documents\Playground\Gameorder\tests\security-storage\bin\Release\net9.0-windows\SecurityStorage.dll'
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Build a self-contained formal Windows application
+        working-directory: H:\Documents\Playground\Gameorder
+        run: |
+          .\Build.ps1 -SelfContained
+          Copy-Item -LiteralPath 'LICENSE','README.md','SECURITY.md','CHANGELOG.md','使用说明.md','THIRD-PARTY.md' -Destination '.\dist'
+          Copy-Item -LiteralPath 'third-party' -Destination '.\dist' -Recurse
+          Get-FileHash -LiteralPath '.\dist\Gameorder.exe' -Algorithm SHA256 |
+            ForEach-Object { "$($_.Hash)  Gameorder.exe" } |
+            Set-Content -LiteralPath '.\dist\SHA256SUMS.txt' -Encoding utf8
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: Gameorder-windows-x64
+          path: H:/Documents/Playground/Gameorder/dist/
+          if-no-files-found: error
+      - name: Remove only the disposable drive mapping
+        if: always()
+        run: |
+          if ($env:GAMEORDER_CI_ROOT -eq 'H:\Documents\Playground\Gameorder') {
+            subst.exe H: /D
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }

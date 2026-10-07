@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net9.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../src/SteamService.cs" Link="SteamService.cs" />
+    <Compile Include="../src/ValveKeyValues.cs" Link="ValveKeyValues.cs" />
+    <Compile Include="../src/Models.cs" Link="Models.cs" />
+    <Compile Include="../src/LocalStore.cs" Link="LocalStore.cs" />
+    <Compile Include="../src/AvatarService.cs" Link="AvatarService.cs" />
+    <Compile Include="../src/SteamSessionService.cs" Link="SteamSessionService.cs" />
+    <Compile Include="../src/InstanceMessageService.cs" Link="InstanceMessageService.cs" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,211 @@
+{
+  "version": "1.8.0",
+  "author": "XIAOYING223",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "58a0c04fb9e92a85c7e8767d7fb12d5593ad77edb927ba82b29342512f8a8043"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "7d0c85420904aa30281a78012e923591bc6c293451ad9402d510bcd1cc5b53e7"
+    },
+    {
+      "path": ".gitignore",
+      "sha256": "b6301e7328e31985b5207e9f73c885092610c792e43b3fb7e2b18cee2bcde008"
+    },
+    {
+      "path": ".gitattributes",
+      "sha256": "cfde50a527f71d38990777e283666ddbe12db62958ee65d0a04086caf2b3abc5"
+    },
+    {
+      "path": "上传GitHub.md",
+      "sha256": "c6108a1d0be1f745d5ad4648266b3c32e07ce36b85308fb941e0ebdff35297a9"
+    },
+    {
+      "path": "Build.ps1",
+      "sha256": "6c54232c5d8ad4d58c0255b1f1743958622436227fcaa1d026904b640524eb46"
+    },
+    {
+      "path": "GenerateIcon.py",
+      "sha256": "e90c6a4c0dc2ddb7af86fa50c1627a932a856eba12aac8657ec5e6c22e89c484"
+    },
+    {
+      "path": "使用说明.md",
+      "sha256": "451191eef1066ba5ef66c86ee6ed712a18542c83b65dbe26bbd6d27412a62211"
+    },
+    {
+      "path": "启动演示.cmd",
+      "sha256": "5cd5cbf214ba95fb2d03384a069a558234224a58bb7fab905b4c7078d6300b46"
+    },
+    {
+      "path": "docs/RELEASE_TEMPLATE.md",
+      "sha256": "692103c9bd6ab1189e7cfc001d5a52a8f97eb60d1383145bf0bf137c749bda42"
+    },
+    {
+      "path": "docs/images/accounts-demo.png",
+      "sha256": "4d28f47416ce38b39dabcb33541580d22c0631629b1c3008770ce980c864fcc7"
+    },
+    {
+      "path": "docs/images/about-demo.png",
+      "sha256": "c1d52f23b6806106f93877fe0d3158f64fbe55a3dd66cddbe00d236a7c8e09bf"
+    },
+    {
+      "path": "src/AboutInfo.cs",
+      "sha256": "3afeb42b4d29e4b559f0ed11bdb9b21718a1a8879b7c3e86d30c71f95eba5d40"
+    },
+    {
+      "path": "src/app.manifest",
+      "sha256": "5c4cf68a3b11c704791404660cb558bc74fc5a4b2303c0436b05219c3c7d8117"
+    },
+    {
+      "path": "src/App.xaml",
+      "sha256": "17a5ffe361b1ab557d5bee6a4464d55bee5dc93b0909950e4d005928d31eafd7"
+    },
+    {
+      "path": "src/App.xaml.cs",
+      "sha256": "a282cf2f2a696e50ebc8e12708e7a2541ed3d16c9303f18d3260c0bf3c1314ca"
+    },
+    {
+      "path": "src/AvatarImageConverter.cs",
+      "sha256": "8891fefe4384d7c8cf1bcef87007686bc0c65bb95e7f084e3eb574e0400dc8aa"
+    },
+    {
+      "path": "src/AvatarService.cs",
+      "sha256": "b6e37c89ddd013951916784be1cdd0e028bd3d6f7d2efa68557c9fcc90c67062"
+    },
+    {
+      "path": "src/Commands.cs",
+      "sha256": "d1f186fca53ad2760605d9b4ace89964b521df401b59523dd6fc0ab561ee2194"
+    },
+    {
+      "path": "src/Gameorder.csproj",
+      "sha256": "45e9a131a743bd04983ca75f5a40a982b427ae5e54d6dcbec2295de08d5f12ea"
+    },
+    {
+      "path": "src/GlobalUsings.cs",
+      "sha256": "9eb56b713f4bd450c169f140e74ff7b6d5e456f3742a30188b947223d01628e4"
+    },
+    {
+      "path": "src/InstanceMessageService.cs",
+      "sha256": "daf30d48ff2a00a382618dd6f0abfe959d0dbdf112428915036ff9c6dce0b0a4"
+    },
+    {
+      "path": "src/LocalStore.cs",
+      "sha256": "67ebb702d656168a090d659c4bc2c1c9ab89355135c7d3091696224ddcd430a0"
+    },
+    {
+      "path": "src/MainViewModel.cs",
+      "sha256": "1ebe0db94adb9f92f6d8bd8d7f1f4fb520e13322bfad50552fe7950fe5834a63"
+    },
+    {
+      "path": "src/MainWindow.xaml",
+      "sha256": "b275b7a5b1eefb4631782973a5fd372d3bda621158048fd0db6890d11a451335"
+    },
+    {
+      "path": "src/MainWindow.xaml.cs",
+      "sha256": "df57d1446240d792e9d8c7b3e0c621e9fe27502845ffa0b33ab28503ace736be"
+    },
+    {
+      "path": "src/Models.cs",
+      "sha256": "aaaf29e2944fe1deeaa3a8a28cc17c36148c699a76dfbdf2ab9c060b66033166"
+    },
+    {
+      "path": "src/QuickAccountWindow.xaml",
+      "sha256": "015c3bd6af502ee969c227aa69db3a29cb8a9b78b8e75d7165ba0e688bbe7960"
+    },
+    {
+      "path": "src/QuickAccountWindow.xaml.cs",
+      "sha256": "b4f84596ff00c63768bfa4670342a7a01cbe7b9accf0220fbec7073f96061c0e"
+    },
+    {
+      "path": "src/ShellIdentity.cs",
+      "sha256": "881e73f18883a4c84f394b3e3a5c3057e52415247f30e932d8c47124e0ca5a12"
+    },
+    {
+      "path": "src/SteamService.cs",
+      "sha256": "d94dd9b9a104cf5b9ff0eab046e241bfef31f269da826bbff207dd0278edf0ba"
+    },
+    {
+      "path": "src/SteamSessionService.cs",
+      "sha256": "7d6cf2f14188c21ac3d9ad33200c4d141bb223bcf9e9374707f7c50f743fc9a2"
+    },
+    {
+      "path": "src/TaskbarAccountWidget.xaml",
+      "sha256": "561e392144c6caae816cb8d9dd7fbfd3039fbdc58b93622942ac87426ae5daa2"
+    },
+    {
+      "path": "src/TaskbarAccountWidget.xaml.cs",
+      "sha256": "7612fd6fc7358df0ddca30519622834652e02cae9234f80ac30d9104be61ed0b"
+    },
+    {
+      "path": "src/TaskbarDockHint.cs",
+      "sha256": "1cb0241cc93ecf34ad4bd894fb13b01f4d68de9b8f0ac4f568659122cfdd9242"
+    },
+    {
+      "path": "src/TaskbarWidgetDockLayout.cs",
+      "sha256": "7ff909406fcf987808ffc0a24f550f07624bd4360a81c400585e482ef623d110"
+    },
+    {
+      "path": "src/TaskbarWidgetHost.cs",
+      "sha256": "8f6e46fed114229e43ddc05a627466f09d235ceb5e9dbc355767f37b8581c325"
+    },
+    {
+      "path": "src/TaskbarWidgetViewModel.cs",
+      "sha256": "41f8f791237ee54a02c9a99182455fb7f93d7e7da329624b717bbbde78ab0c2f"
+    },
+    {
+      "path": "src/TrayService.cs",
+      "sha256": "e436f4362bc4370950de1d025c3006bc0eb0c0aa555f3639fd7d9e53185cb084"
+    },
+    {
+      "path": "src/UiVerification.cs",
+      "sha256": "2cf588a177d1161143314ab160069752195d6b49bf39ffd2ef0a6f6079fcc69f"
+    },
+    {
+      "path": "src/ValveKeyValues.cs",
+      "sha256": "f9f16307b0fab618df5b3a288b17de300ba6f56b1e521f6b2cf4dc022c40ff68"
+    },
+    {
+      "path": "src/assets/Gameorder.png",
+      "sha256": "7599828b16cda1a9c1d5dfcf69ff204200e90805c5218230837482ca210b1ee0"
+    },
+    {
+      "path": "src/assets/Gameorder.ico",
+      "sha256": "ae91393dc049d8d54c8a3be8360b609c503369042368c7c34c937e17d7f29219"
+    },
+    {
+      "path": "src/assets/CreatorAvatar.png",
+      "sha256": "8c15dfdc8e51841328816a6b159fb459a4e59e9ed0ca153ba38c66e934722c0b"
+    },
+    {
+      "path": "tests/AccountGroups.Tests.cs",
+      "sha256": "71d04f0c1ab16c92770e2e259c632b3097e128e87e0ebfa356711095a301d445"
+    },
+    {
+      "path": "tests/AvatarService.Tests.cs",
+      "sha256": "874026d960c0710793e0b57e49898b1c6585b5b10d69e2d9d8be69b39a62e5a3"
+    },
+    {
+      "path": "tests/Gameorder.Tests.csproj",
+      "sha256": "d1e4b57c2f02395876d733ff8e83dac77a83871809e741c4efc76bc7760c3d61"
+    },
+    {
+      "path": "tests/InstanceService.Tests.cs",
+      "sha256": "d837ab40383ae4ccd065bd4a3e8b1af79e0924f29d321d76e81d28c77177ccff"
+    },
+    {
+      "path": "tests/Program.cs",
+      "sha256": "5ffce30c7a5ad751fe78f65f411a809f11f10e0dd56b70a1e9bdf50dfd1d01ae"
+    },
+    {
+      "path": "tests/SteamSession.Tests.cs",
+      "sha256": "1d619f952f6b79b89cdf1807497ff0ec7c3f16939027604645c157d295e90ae2"
+    },
+    {
+      "path": "tests/TaskbarPreferences.Tests.cs",
+      "sha256": "207987277cce6c46d2646998a63ccd4dc2d2a5edf4c79878924d77bf66506283"
+    }
+  ],
+  "private_data_included": false
+}

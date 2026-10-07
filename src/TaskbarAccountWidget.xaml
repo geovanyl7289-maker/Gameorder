@@ -1,0 +1,56 @@
+<UserControl x:Class="Gameorder.TaskbarAccountWidget" x:Name="WidgetRoot"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:Gameorder"
+             Width="360" Height="48" Background="Transparent" ClipToBounds="True"
+             Foreground="{DynamicResource WidgetForeground}" FontFamily="Segoe UI, Microsoft YaHei UI"
+             UseLayoutRounding="True" SnapsToDevicePixels="True" AutomationProperties.Name="Gameorder 任务栏账号控件">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolVisibility"/>
+        <local:AvatarImageConverter x:Key="AvatarImage"/>
+        <SolidColorBrush x:Key="WidgetForeground" Color="#293C57"/>
+        <SolidColorBrush x:Key="WidgetMuted" Color="#7588A3"/>
+        <SolidColorBrush x:Key="WidgetHover" Color="#CCFFFFFF"/>
+        <SolidColorBrush x:Key="WidgetButtonHover" Color="#85C8D8EE"/>
+        <SolidColorBrush x:Key="WidgetFocus" Color="#6385B4"/>
+        <Style TargetType="TextBlock" x:Key="WidgetGlyph"><Setter Property="FontFamily" Value="Segoe MDL2 Assets"/><Setter Property="FontSize" Value="12"/><Setter Property="VerticalAlignment" Value="Center"/></Style>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/><Setter Property="Foreground" Value="{DynamicResource WidgetForeground}"/><Setter Property="BorderBrush" Value="Transparent"/><Setter Property="BorderThickness" Value="1"/><Setter Property="Padding" Value="0"/>
+            <Setter Property="Width" Value="22"/><Setter Property="Height" Value="28"/><Setter Property="Cursor" Value="Hand"/><Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="ToolTipService.ShowOnDisabled" Value="True"/>
+            <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="Button"><Border x:Name="ButtonFrame" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="7"><ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/></Border><ControlTemplate.Triggers><Trigger Property="IsMouseOver" Value="True"><Setter TargetName="ButtonFrame" Property="Background" Value="{DynamicResource WidgetButtonHover}"/></Trigger><Trigger Property="IsPressed" Value="True"><Setter TargetName="ButtonFrame" Property="Opacity" Value="0.55"/></Trigger><Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="ButtonFrame" Property="BorderBrush" Value="{DynamicResource WidgetFocus}"/></Trigger><Trigger Property="IsEnabled" Value="False"><Setter TargetName="ButtonFrame" Property="Opacity" Value="0.32"/></Trigger></ControlTemplate.Triggers></ControlTemplate></Setter.Value></Setter>
+        </Style>
+    </UserControl.Resources>
+    <Border x:Name="WidgetFrame" Margin="0,1" Padding="8,4" CornerRadius="10" BorderThickness="1" ToolTip="{Binding AccountTooltip}">
+        <Border.Style><Style TargetType="Border"><Setter Property="Background" Value="#01000000"/><Setter Property="BorderBrush" Value="Transparent"/><Style.Triggers><Trigger Property="IsMouseOver" Value="True"><Setter Property="Background" Value="{DynamicResource WidgetHover}"/></Trigger><Trigger Property="IsKeyboardFocusWithin" Value="True"><Setter Property="Background" Value="{DynamicResource WidgetHover}"/><Setter Property="BorderBrush" Value="{DynamicResource WidgetFocus}"/></Trigger></Style.Triggers></Style></Border.Style>
+        <Border.ContextMenu><ContextMenu><MenuItem Header="打开账号管理" Click="ManagerMenuClick"/><MenuItem Header="显示当前登录账号" Click="FollowCurrentMenuClick"/></ContextMenu></Border.ContextMenu>
+        <Grid x:Name="WidgetContent" VerticalAlignment="Center">
+            <Grid.ColumnDefinitions><ColumnDefinition Width="8"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+            <Border x:Name="DragGrip" Width="8" Height="24" Background="Transparent" Cursor="SizeAll" ToolTip="拖动位置" AutomationProperties.Name="拖动位置">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Opacity="0.65"><Ellipse Width="2" Height="2" Fill="{DynamicResource WidgetMuted}" Margin="0,2"/><Ellipse Width="2" Height="2" Fill="{DynamicResource WidgetMuted}" Margin="0,2"/><Ellipse Width="2" Height="2" Fill="{DynamicResource WidgetMuted}" Margin="0,2"/></StackPanel>
+            </Border>
+            <Button x:Name="AccountAvatarButton" Grid.Column="1" Click="OpenAccountsClick" Width="{Binding AvatarSize, ElementName=WidgetRoot}" Height="{Binding AvatarSize, ElementName=WidgetRoot}" Margin="0,0,8,0" AutomationProperties.Name="选择 Steam 账号" ToolTip="{Binding AccountTooltip}">
+                <Button.Template><ControlTemplate TargetType="Button"><ContentPresenter/><ControlTemplate.Triggers><Trigger Property="IsKeyboardFocused" Value="True"><Setter Property="Opacity" Value="0.6"/></Trigger></ControlTemplate.Triggers></ControlTemplate></Button.Template>
+                <Grid Width="{Binding AvatarSize, ElementName=WidgetRoot}" Height="{Binding AvatarSize, ElementName=WidgetRoot}">
+                    <Ellipse Fill="{Binding SelectedAccount.Accent, TargetNullValue=#DCE7F4}"/>
+                    <TextBlock Text="&#xE77B;" Style="{StaticResource WidgetGlyph}" FontSize="17" Foreground="#748CAC" HorizontalAlignment="Center"/>
+                    <Ellipse Visibility="{Binding HasAvatar, Converter={StaticResource BoolVisibility}}"><Ellipse.Fill><ImageBrush ImageSource="{Binding AvatarPath, Converter={StaticResource AvatarImage}}" Stretch="UniformToFill"/></Ellipse.Fill></Ellipse>
+                    <Ellipse Width="9" Height="9" Stroke="#DFFFFFFF" StrokeThickness="1.5" HorizontalAlignment="Right" VerticalAlignment="Bottom" ToolTip="{Binding PresenceHint}"><Ellipse.Style><Style TargetType="Ellipse"><Setter Property="Fill" Value="#92A3BA"/><Style.Triggers><DataTrigger Binding="{Binding IsOnline}" Value="True"><Setter Property="Fill" Value="#37B483"/></DataTrigger><DataTrigger Binding="{Binding IsOffline}" Value="True"><Setter Property="Fill" Value="#D2A754"/></DataTrigger></Style.Triggers></Style></Ellipse.Style></Ellipse>
+                    <Border Width="14" Height="14" CornerRadius="5" Background="#EAF1FE" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="{Binding IsLocked,Converter={StaticResource BoolVisibility}}" ToolTip="应用已锁定"><TextBlock Text="&#xE72E;" Style="{StaticResource WidgetGlyph}" FontSize="9" Foreground="#537BB8" HorizontalAlignment="Center"/></Border>
+                </Grid>
+            </Button>
+            <Button Grid.Column="2" Click="OpenAccountsClick" Height="34" HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Width="Auto" Margin="0,0,7,0" ToolTip="{Binding AccountTooltip}" AutomationProperties.Name="{Binding DisplayName}" Visibility="{Binding ShowLabels, ElementName=WidgetRoot, Converter={StaticResource BoolVisibility}}">
+                <Button.Template><ControlTemplate TargetType="Button"><ContentPresenter HorizontalAlignment="Stretch" VerticalAlignment="Center"/><ControlTemplate.Triggers><Trigger Property="IsKeyboardFocused" Value="True"><Setter Property="Opacity" Value="0.65"/></Trigger></ControlTemplate.Triggers></ControlTemplate></Button.Template>
+                <StackPanel VerticalAlignment="Center"><TextBlock Text="{Binding DisplayName}" FontSize="11.5" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+                    <TextBlock Text="{Binding Note}" Foreground="{DynamicResource WidgetMuted}" FontSize="10" Margin="0,2,0,0" TextTrimming="CharacterEllipsis"><TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Visibility" Value="Collapsed"/><Style.Triggers><MultiDataTrigger><MultiDataTrigger.Conditions><Condition Binding="{Binding HasNote}" Value="True"/><Condition Binding="{Binding ShowNote, ElementName=WidgetRoot}" Value="True"/></MultiDataTrigger.Conditions><Setter Property="Visibility" Value="Visible"/></MultiDataTrigger></Style.Triggers></Style></TextBlock.Style></TextBlock>
+                </StackPanel>
+            </Button>
+            <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
+                <StackPanel Orientation="Horizontal" Margin="0,0,4,0" Visibility="{Binding ShowNavigation, ElementName=WidgetRoot, Converter={StaticResource BoolVisibility}}"><Button Command="{Binding PreviousCommand}" ToolTip="预览上一个账号" AutomationProperties.Name="预览上一个账号"><TextBlock Text="&#xE76B;" Style="{StaticResource WidgetGlyph}" FontSize="11"/></Button><Button Command="{Binding NextCommand}" ToolTip="预览下一个账号" AutomationProperties.Name="预览下一个账号"><TextBlock Text="&#xE76C;" Style="{StaticResource WidgetGlyph}" FontSize="11"/></Button></StackPanel>
+                <StackPanel Orientation="Horizontal" Visibility="{Binding ShowSwitchControls, ElementName=WidgetRoot, Converter={StaticResource BoolVisibility}}"><Button Click="OnlineClick" Width="26" IsEnabled="{Binding CanOnline}" ToolTip="在线切换；无法使用时检查 Steam 安装路径" AutomationProperties.Name="在线切换"><TextBlock Text="&#xE774;" Style="{StaticResource WidgetGlyph}" FontSize="14"/></Button><Button Click="OfflineClick" Width="26" IsEnabled="{Binding CanOffline}" ToolTip="离线切换，需要本机已保存的登录" AutomationProperties.Name="离线切换"><TextBlock Text="&#xEB5E;" Style="{StaticResource WidgetGlyph}" FontSize="14"/></Button></StackPanel>
+                <Button Click="OpenAccountsClick" Width="20" Margin="2,0,0,0" ToolTip="展开账号头像栏" AutomationProperties.Name="展开账号头像栏"><TextBlock Text="&#xE70E;" Style="{StaticResource WidgetGlyph}" FontSize="10"/></Button>
+                <Button Click="OpenManagerClick" Width="20" Visibility="{Binding ShowManagerButton, ElementName=WidgetRoot, Converter={StaticResource BoolVisibility}}" ToolTip="打开完整账号管理" AutomationProperties.Name="打开完整账号管理"><TextBlock Text="&#xE713;" Style="{StaticResource WidgetGlyph}" FontSize="12"/></Button>
+            </StackPanel>
+        </Grid>
+    </Border>
+</UserControl>

@@ -1,0 +1,567 @@
+<Window x:Class="Gameorder.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:Gameorder"
+        xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
+        Title="Gameorder" Icon="assets/Gameorder.ico" Width="1280" Height="820" MinWidth="1000" MinHeight="680"
+        WindowStyle="None" ResizeMode="CanResize"
+        WindowStartupLocation="CenterScreen" Background="#F5F7FA" FontFamily="Segoe UI, Microsoft YaHei UI"
+        FontSize="14" Foreground="#24334A" UseLayoutRounding="True" SnapsToDevicePixels="True">
+    <shell:WindowChrome.WindowChrome>
+        <shell:WindowChrome CaptionHeight="44" ResizeBorderThickness="7" GlassFrameThickness="1" CornerRadius="12" UseAeroCaptionButtons="False"/>
+    </shell:WindowChrome.WindowChrome>
+    <Window.Resources>
+        <BitmapImage x:Key="CreatorAvatarPreview" UriSource="assets/CreatorAvatar.png" DecodePixelWidth="208" CacheOption="OnLoad"/>
+        <Style TargetType="Thumb" x:Key="SlimScrollThumb">
+            <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="Thumb"><Border x:Name="Grip" Background="#C8D2DF" CornerRadius="5" Margin="2"/><ControlTemplate.Triggers><Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Grip" Property="Background" Value="#9DACBF"/></Trigger><Trigger Property="IsDragging" Value="True"><Setter TargetName="Grip" Property="Background" Value="#7E94B2"/></Trigger></ControlTemplate.Triggers></ControlTemplate></Setter.Value></Setter>
+        </Style>
+        <Style TargetType="ScrollBar">
+            <Setter Property="Width" Value="10"/><Setter Property="Background" Value="Transparent"/><Setter Property="Focusable" Value="False"/>
+            <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="ScrollBar">
+                <Track x:Name="PART_Track" IsDirectionReversed="True" Orientation="{TemplateBinding Orientation}">
+                    <Track.DecreaseRepeatButton><RepeatButton x:Name="Decrease" Command="{x:Static ScrollBar.PageUpCommand}" Focusable="False"><RepeatButton.Template><ControlTemplate TargetType="RepeatButton"><Border Background="Transparent"/></ControlTemplate></RepeatButton.Template></RepeatButton></Track.DecreaseRepeatButton>
+                    <Track.Thumb><Thumb x:Name="GripThumb" MinHeight="24" Style="{StaticResource SlimScrollThumb}"/></Track.Thumb>
+                    <Track.IncreaseRepeatButton><RepeatButton x:Name="Increase" Command="{x:Static ScrollBar.PageDownCommand}" Focusable="False"><RepeatButton.Template><ControlTemplate TargetType="RepeatButton"><Border Background="Transparent"/></ControlTemplate></RepeatButton.Template></RepeatButton></Track.IncreaseRepeatButton>
+                </Track>
+                <ControlTemplate.Triggers><Trigger Property="Orientation" Value="Horizontal"><Setter TargetName="PART_Track" Property="IsDirectionReversed" Value="False"/><Setter TargetName="GripThumb" Property="MinHeight" Value="0"/><Setter TargetName="GripThumb" Property="MinWidth" Value="24"/><Setter TargetName="Decrease" Property="Command" Value="{x:Static ScrollBar.PageLeftCommand}"/><Setter TargetName="Increase" Property="Command" Value="{x:Static ScrollBar.PageRightCommand}"/></Trigger></ControlTemplate.Triggers>
+            </ControlTemplate></Setter.Value></Setter>
+            <Style.Triggers><Trigger Property="Orientation" Value="Horizontal"><Setter Property="Width" Value="Auto"/><Setter Property="Height" Value="10"/></Trigger></Style.Triggers>
+        </Style>
+        <BooleanToVisibilityConverter x:Key="BoolVisibility"/>
+        <local:AvatarImageConverter x:Key="AvatarImage"/>
+        <SolidColorBrush x:Key="Muted" Color="#738197"/>
+        <SolidColorBrush x:Key="Line" Color="#E6EAF0"/>
+        <SolidColorBrush x:Key="Blue" Color="#326BDE"/>
+        <Style TargetType="Button" x:Key="ButtonBase">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="#344359"/>
+            <Setter Property="BorderBrush" Value="#DDE3EB"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="16,10"/>
+            <Setter Property="MinHeight" Value="42"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Frame" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="12" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RecognizesAccessKey="True"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Frame" Property="Opacity" Value="0.82"/></Trigger>
+                            <Trigger Property="IsPressed" Value="True"><Setter TargetName="Frame" Property="Opacity" Value="0.65"/></Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="Frame" Property="BorderBrush" Value="#326BDE"/><Setter TargetName="Frame" Property="BorderThickness" Value="2"/></Trigger>
+                            <Trigger Property="IsEnabled" Value="False"><Setter TargetName="Frame" Property="Opacity" Value="0.42"/></Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="Button" BasedOn="{StaticResource ButtonBase}"/>
+        <Style TargetType="Button" x:Key="PrimaryButton" BasedOn="{StaticResource ButtonBase}">
+            <Setter Property="Background" Value="#326BDE"/><Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#326BDE"/><Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+        <Style TargetType="Button" x:Key="QuietButton" BasedOn="{StaticResource ButtonBase}">
+            <Setter Property="Background" Value="Transparent"/><Setter Property="BorderBrush" Value="Transparent"/>
+        </Style>
+        <Style TargetType="Button" x:Key="TitleBarButton" BasedOn="{StaticResource ButtonBase}">
+            <Setter Property="Width" Value="36"/><Setter Property="Height" Value="30"/><Setter Property="MinHeight" Value="30"/>
+            <Setter Property="Padding" Value="0"/><Setter Property="Background" Value="Transparent"/><Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#7B8DA6"/><Setter Property="shell:WindowChrome.IsHitTestVisibleInChrome" Value="True"/>
+            <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="Button"><Border x:Name="CaptionButtonFrame" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" CornerRadius="8"><ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/></Border><ControlTemplate.Triggers><Trigger Property="IsPressed" Value="True"><Setter TargetName="CaptionButtonFrame" Property="Opacity" Value="0.6"/></Trigger><Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="CaptionButtonFrame" Property="BorderBrush" Value="#AEBFDC"/></Trigger></ControlTemplate.Triggers></ControlTemplate></Setter.Value></Setter>
+            <Style.Triggers><Trigger Property="IsMouseOver" Value="True"><Setter Property="Background" Value="#EDF2F9"/><Setter Property="Foreground" Value="#3D5D87"/></Trigger></Style.Triggers>
+        </Style>
+        <Style TargetType="ToggleButton" x:Key="TaskbarWidgetSwitch">
+            <Setter Property="Width" Value="48"/><Setter Property="Height" Value="28"/><Setter Property="Cursor" Value="Hand"/><Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="ToggleButton"><Border x:Name="SwitchTrack" Background="#DDE5F0" BorderBrush="Transparent" BorderThickness="1" CornerRadius="14"><Grid Margin="3"><Border x:Name="SwitchKnob" Background="White" Width="20" Height="20" CornerRadius="10" HorizontalAlignment="Left"><TextBlock x:Name="SwitchCheck" Text="&#xE73E;" FontFamily="Segoe MDL2 Assets" FontSize="9" Foreground="#326BDE" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed"/></Border></Grid></Border><ControlTemplate.Triggers><Trigger Property="IsChecked" Value="True"><Setter TargetName="SwitchTrack" Property="Background" Value="#326BDE"/><Setter TargetName="SwitchKnob" Property="HorizontalAlignment" Value="Right"/><Setter TargetName="SwitchCheck" Property="Visibility" Value="Visible"/></Trigger><Trigger Property="IsMouseOver" Value="True"><Setter TargetName="SwitchTrack" Property="Opacity" Value="0.85"/></Trigger><Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="SwitchTrack" Property="BorderBrush" Value="#8CACDC"/></Trigger><Trigger Property="IsEnabled" Value="False"><Setter TargetName="SwitchTrack" Property="Opacity" Value="0.42"/></Trigger></ControlTemplate.Triggers></ControlTemplate></Setter.Value></Setter>
+        </Style>
+        <Style TargetType="Button" x:Key="TaskbarDockChoice" BasedOn="{StaticResource ButtonBase}">
+            <Setter Property="Background" Value="#F5F7FC"/><Setter Property="BorderBrush" Value="#E7EDF5"/><Setter Property="Foreground" Value="#7288A6"/>
+            <Setter Property="MinHeight" Value="36"/><Setter Property="Padding" Value="13,8"/><Setter Property="FontSize" Value="12"/>
+        </Style>
+        <Style TargetType="Button" x:Key="NavButton" BasedOn="{StaticResource ButtonBase}">
+            <Setter Property="Background" Value="Transparent"/><Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/><Setter Property="Padding" Value="14,13"/>
+            <Setter Property="Margin" Value="0,0,0,6"/>
+            <Style.Triggers><Trigger Property="IsMouseOver" Value="True"><Setter Property="Background" Value="#EEF2F6"/></Trigger></Style.Triggers>
+        </Style>
+        <Style TargetType="Button" x:Key="FilterButton" BasedOn="{StaticResource ButtonBase}">
+            <Setter Property="Background" Value="Transparent"/><Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Padding" Value="0"/><Setter Property="Width" Value="42"/><Setter Property="MinHeight" Value="34"/><Setter Property="Height" Value="34"/><Setter Property="FontSize" Value="16"/>
+        </Style>
+        <Style TargetType="PasswordBox" x:Key="LockPasswordStyle">
+            <Setter Property="MinHeight" Value="48"/><Setter Property="Padding" Value="14,12"/><Setter Property="MaxLength" Value="4096"/>
+            <Setter Property="Background" Value="White"/><Setter Property="BorderBrush" Value="#D7E3F4"/><Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="PasswordBox"><Border x:Name="LockPasswordFrame" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" CornerRadius="13"><ScrollViewer x:Name="PART_ContentHost"/></Border><ControlTemplate.Triggers><Trigger Property="IsKeyboardFocusWithin" Value="True"><Setter TargetName="LockPasswordFrame" Property="BorderBrush" Value="#326BDE"/></Trigger><DataTrigger Binding="{Binding HasAppLockMessage}" Value="True"><Setter TargetName="LockPasswordFrame" Property="BorderBrush" Value="#D76D7B"/></DataTrigger></ControlTemplate.Triggers></ControlTemplate></Setter.Value></Setter>
+        </Style>
+        <Style TargetType="ToggleButton" x:Key="PasswordEye">
+            <Setter Property="Width" Value="36"/><Setter Property="Height" Value="36"/><Setter Property="Margin" Value="7,0,0,0"/>
+            <Setter Property="Cursor" Value="Hand"/><Setter Property="Foreground" Value="#8294AE"/><Setter Property="Background" Value="Transparent"/>
+            <Setter Property="ToolTip" Value="显示密码"/><Setter Property="AutomationProperties.Name" Value="显示密码"/>
+            <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="ToggleButton"><Border x:Name="EyeFrame" Background="{TemplateBinding Background}" CornerRadius="11"><TextBlock Text="&#xE890;" FontFamily="Segoe MDL2 Assets" FontSize="18" Foreground="{TemplateBinding Foreground}" HorizontalAlignment="Center" VerticalAlignment="Center"/></Border><ControlTemplate.Triggers><Trigger Property="IsMouseOver" Value="True"><Setter TargetName="EyeFrame" Property="Background" Value="#E8F0FE"/></Trigger><Trigger Property="IsChecked" Value="True"><Setter TargetName="EyeFrame" Property="Background" Value="#E8F0FE"/><Setter Property="Foreground" Value="#326BDE"/></Trigger><Trigger Property="IsKeyboardFocused" Value="True"><Setter TargetName="EyeFrame" Property="Background" Value="#E8F0FE"/></Trigger><Trigger Property="IsEnabled" Value="False"><Setter Property="Opacity" Value="0.45"/></Trigger></ControlTemplate.Triggers></ControlTemplate></Setter.Value></Setter>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value="White"/><Setter Property="Foreground" Value="#24334A"/>
+            <Setter Property="BorderBrush" Value="#DDE3EB"/><Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="12,10"/><Setter Property="MinHeight" Value="42"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/><Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Template"><Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Border x:Name="InputFrame" CornerRadius="12" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                        <ScrollViewer x:Name="PART_ContentHost"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsKeyboardFocusWithin" Value="True"><Setter TargetName="InputFrame" Property="BorderBrush" Value="#326BDE"/></Trigger>
+                        <Trigger Property="IsEnabled" Value="False"><Setter TargetName="InputFrame" Property="Opacity" Value="0.5"/></Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value></Setter>
+        </Style>
+        <Style TargetType="TextBlock" x:Key="SmallLabel"><Setter Property="FontSize" Value="12"/><Setter Property="Foreground" Value="{StaticResource Muted}"/></Style>
+        <Style TargetType="TextBlock" x:Key="FieldLabel" BasedOn="{StaticResource SmallLabel}"><Setter Property="Margin" Value="0,0,0,7"/></Style>
+        <Style TargetType="TextBlock" x:Key="Icon"><Setter Property="FontFamily" Value="Segoe MDL2 Assets"/><Setter Property="FontSize" Value="16"/><Setter Property="VerticalAlignment" Value="Center"/></Style>
+        <Style TargetType="Button" x:Key="FolderChip" BasedOn="{StaticResource ButtonBase}">
+            <Setter Property="Background" Value="Transparent"/><Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="MinHeight" Value="35"/><Setter Property="Padding" Value="11,7"/><Setter Property="Margin" Value="0,0,5,0"/>
+            <Setter Property="Foreground" Value="#7788A1"/>
+            <Style.Triggers><DataTrigger Binding="{Binding IsSelected}" Value="True"><Setter Property="Background" Value="#EAF1FE"/><Setter Property="Foreground" Value="#2F65CA"/><Setter Property="BorderBrush" Value="#D3E1FA"/></DataTrigger></Style.Triggers>
+        </Style>
+        <Style TargetType="ComboBoxItem">
+            <Setter Property="Padding" Value="12,9"/><Setter Property="HorizontalContentAlignment" Value="Stretch"/><Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="ComboBoxItem"><Border x:Name="Choice" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" CornerRadius="8" Margin="3,2"><ContentPresenter/></Border><ControlTemplate.Triggers><Trigger Property="IsHighlighted" Value="True"><Setter TargetName="Choice" Property="Background" Value="#EDF3FE"/></Trigger><Trigger Property="IsSelected" Value="True"><Setter TargetName="Choice" Property="Background" Value="#EAF1FE"/><Setter Property="Foreground" Value="#2F65CA"/></Trigger></ControlTemplate.Triggers></ControlTemplate></Setter.Value></Setter>
+        </Style>
+        <Style TargetType="ComboBox">
+            <Setter Property="Background" Value="White"/><Setter Property="Foreground" Value="#24334A"/><Setter Property="BorderBrush" Value="#DDE3EB"/><Setter Property="BorderThickness" Value="1"/><Setter Property="MinHeight" Value="44"/>
+            <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="ComboBox">
+                <Grid>
+                    <ToggleButton Focusable="False" IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                        <ToggleButton.Template><ControlTemplate TargetType="ToggleButton"><Border x:Name="ChoiceFrame" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="12"><TextBlock Text="&#xE70D;" FontFamily="Segoe MDL2 Assets" FontSize="11" Foreground="#7788A1" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,15,0"/></Border><ControlTemplate.Triggers><Trigger Property="IsMouseOver" Value="True"><Setter TargetName="ChoiceFrame" Property="BorderBrush" Value="#AEBFD7"/></Trigger><Trigger Property="IsChecked" Value="True"><Setter TargetName="ChoiceFrame" Property="BorderBrush" Value="#326BDE"/></Trigger></ControlTemplate.Triggers></ControlTemplate></ToggleButton.Template>
+                    </ToggleButton>
+                    <ContentPresenter Margin="13,10,35,10" VerticalAlignment="Center" IsHitTestVisible="False" Content="{TemplateBinding SelectionBoxItem}" ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}" ContentStringFormat="{TemplateBinding SelectionBoxItemStringFormat}"/>
+                    <Popup x:Name="PART_Popup" Placement="Bottom" AllowsTransparency="True" Focusable="False" IsOpen="{TemplateBinding IsDropDownOpen}" PopupAnimation="Fade">
+                        <Border Background="White" BorderBrush="#DDE5F0" BorderThickness="1" CornerRadius="12" Padding="4" MinWidth="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}" Margin="0,5,0,0"><ScrollViewer MaxHeight="230" CanContentScroll="True" VerticalScrollBarVisibility="Auto"><ItemsPresenter/></ScrollViewer></Border>
+                    </Popup>
+                </Grid>
+                <ControlTemplate.Triggers><Trigger Property="IsEnabled" Value="False"><Setter Property="Opacity" Value="0.5"/></Trigger></ControlTemplate.Triggers>
+            </ControlTemplate></Setter.Value></Setter>
+        </Style>
+        <Style TargetType="ListBoxItem" x:Key="AccountTile">
+            <Setter Property="Width" Value="160"/><Setter Property="Height" Value="220"/>
+            <Setter Property="Padding" Value="12"/><Setter Property="Margin" Value="0,0,12,12"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/><Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#E6EAF0"/><Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Cursor" Value="Hand"/><Setter Property="AutomationProperties.Name" Value="{Binding DisplayName}"/><Setter Property="AutomationProperties.HelpText" Value="{Binding GamePresenceHint}"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Template"><Setter.Value>
+                <ControlTemplate TargetType="ListBoxItem">
+                    <Border x:Name="TileFrame" CornerRadius="18" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="Stretch" VerticalAlignment="Top"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <DataTrigger Binding="{Binding IsActive}" Value="True"><Setter TargetName="TileFrame" Property="Background" Value="#F6FBF9"/><Setter TargetName="TileFrame" Property="BorderBrush" Value="#C6E2D6"/></DataTrigger>
+                        <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="TileFrame" Property="Background" Value="#F5F8FD"/><Setter TargetName="TileFrame" Property="BorderBrush" Value="#CBD9ED"/></Trigger>
+                        <Trigger Property="IsSelected" Value="True"><Setter TargetName="TileFrame" Property="Background" Value="#EDF3FF"/><Setter TargetName="TileFrame" Property="BorderBrush" Value="#326BDE"/></Trigger>
+                        <Trigger Property="IsKeyboardFocusWithin" Value="True"><Setter TargetName="TileFrame" Property="BorderBrush" Value="#326BDE"/></Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value></Setter>
+        </Style>
+
+        <Style TargetType="Button" x:Key="IconButton" BasedOn="{StaticResource ButtonBase}">
+            <Setter Property="Width" Value="42"/><Setter Property="Height" Value="42"/><Setter Property="Padding" Value="0"/>
+        </Style>
+        <Style TargetType="Button" x:Key="FolderActionButton" BasedOn="{StaticResource IconButton}">
+            <Setter Property="MinHeight" Value="35"/><Setter Property="Width" Value="30"/><Setter Property="Height" Value="35"/><Setter Property="Background" Value="Transparent"/><Setter Property="BorderBrush" Value="Transparent"/>
+            <Style.Triggers><DataTrigger Binding="{Binding ActiveFolderId}" Value="*"><Setter Property="Visibility" Value="Collapsed"/></DataTrigger><DataTrigger Binding="{Binding ActiveFolderId}" Value=""><Setter Property="Visibility" Value="Collapsed"/></DataTrigger></Style.Triggers>
+        </Style>
+        <Style TargetType="Button" x:Key="RailButton" BasedOn="{StaticResource ButtonBase}">
+            <Setter Property="Width" Value="54"/><Setter Property="Height" Value="54"/><Setter Property="Padding" Value="0"/>
+            <Setter Property="Margin" Value="0,0,0,12"/><Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/><Setter Property="Foreground" Value="#74859D"/>
+            <Style.Triggers><Trigger Property="IsMouseOver" Value="True"><Setter Property="Background" Value="#EDF2F9"/></Trigger></Style.Triggers>
+        </Style>
+        <Style TargetType="Ellipse" x:Key="PresenceDot">
+            <Setter Property="Fill" Value="#ADB8C7"/>
+            <Style.Triggers><DataTrigger Binding="{Binding IsOnline}" Value="True"><Setter Property="Fill" Value="#37A77B"/></DataTrigger><DataTrigger Binding="{Binding IsOffline}" Value="True"><Setter Property="Fill" Value="#D6A251"/></DataTrigger><DataTrigger Binding="{Binding IsPlaying}" Value="True"><Setter Property="Fill" Value="#9266D2"/></DataTrigger></Style.Triggers>
+        </Style>
+        <Style TargetType="Ellipse" x:Key="SessionDot">
+            <Setter Property="Fill" Value="#A7B3C4"/>
+            <Style.Triggers><DataTrigger Binding="{Binding IsSessionOnline}" Value="True"><Setter Property="Fill" Value="#37A77B"/></DataTrigger><DataTrigger Binding="{Binding IsSessionOffline}" Value="True"><Setter Property="Fill" Value="#D6A251"/></DataTrigger></Style.Triggers>
+        </Style>
+    </Window.Resources>
+    <Grid Background="#F5F7FA">
+        <Grid.RowDefinitions><RowDefinition Height="44"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+        <Grid.ColumnDefinitions><ColumnDefinition Width="96"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+        <Border x:Name="TitleBar" Grid.Row="0" Grid.ColumnSpan="2" Background="#FCFDFE" BorderBrush="#E7EDF5" BorderThickness="0,0,0,1" CornerRadius="10,10,0,0">
+            <Grid Margin="17,0,10,0"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center"><Image Source="assets/Gameorder.png" Width="20" Height="20" Margin="0,0,9,0"/><TextBlock Text="Gameorder" FontSize="12.5" FontWeight="SemiBold" Foreground="#536B8D" VerticalAlignment="Center"/></StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="{Binding IsResetTest,Converter={StaticResource BoolVisibility}}">
+                    <Border Background="#FFF1DA" CornerRadius="7" Padding="10,4"><TextBlock Text="重置测试 · 虚拟数据" FontSize="12" FontWeight="SemiBold" Foreground="#996522"/></Border>
+                    <Button Command="{Binding RestoreResetTestDataCommand}" Content="重建测试数据" Margin="10,0,0,0" MinHeight="26" Padding="9,4" FontSize="11" shell:WindowChrome.IsHitTestVisibleInChrome="True" ToolTip="恢复虚拟账号与测试密码，不操作正式资料"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button x:Name="TitleMinimizeButton" Click="TitleMinimizeClick" Style="{StaticResource TitleBarButton}" ToolTip="最小化到后台" AutomationProperties.Name="最小化" Margin="0,0,4,0"><TextBlock Text="&#xE921;" FontFamily="Segoe MDL2 Assets" FontSize="10"/></Button>
+                    <Button x:Name="TitleCloseButton" Click="TitleCloseClick" ToolTip="关闭窗口" AutomationProperties.Name="关闭窗口"><Button.Style><Style TargetType="Button" BasedOn="{StaticResource TitleBarButton}"><Style.Triggers><Trigger Property="IsMouseOver" Value="True"><Setter Property="Foreground" Value="#B8636F"/><Setter Property="Background" Value="#FCEFF0"/></Trigger></Style.Triggers></Style></Button.Style><TextBlock Text="&#xE8BB;" FontFamily="Segoe MDL2 Assets" FontSize="10"/></Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+        <Border Grid.Row="1" Grid.Column="0" Background="#FCFDFE" BorderBrush="#E5EAF2" BorderThickness="0,0,1,0">
+            <Border.Style><Style TargetType="Border"><Style.Triggers><DataTrigger Binding="{Binding IsLocked}" Value="True"><Setter Property="IsEnabled" Value="False"/><Setter Property="Visibility" Value="Hidden"/></DataTrigger><DataTrigger Binding="{Binding IsAddAccountOpen}" Value="True"><Setter Property="IsEnabled" Value="False"/></DataTrigger><DataTrigger Binding="{Binding HasManagementDialog}" Value="True"><Setter Property="IsEnabled" Value="False"/></DataTrigger><DataTrigger Binding="{Binding PendingConfirmation}" Value="True"><Setter Property="IsEnabled" Value="False"/></DataTrigger></Style.Triggers></Style></Border.Style>
+            <Grid Margin="18,26,18,20">
+                <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                <Image Source="assets/Gameorder.png" Width="48" Height="48" Margin="0,0,0,44" ToolTip="Gameorder" AutomationProperties.Name="Gameorder"/>
+                <StackPanel Grid.Row="1" HorizontalAlignment="Center">
+                    <Button Command="{Binding ShowAccountsCommand}" ToolTip="账号" AutomationProperties.Name="账号库">
+                        <Button.Style><Style TargetType="Button" BasedOn="{StaticResource RailButton}"><Style.Triggers><DataTrigger Binding="{Binding IsAccountsView}" Value="True"><Setter Property="Background" Value="#EAF1FE"/><Setter Property="Foreground" Value="#326BDE"/></DataTrigger></Style.Triggers></Style></Button.Style>
+                        <TextBlock Text="&#xE77B;" Style="{StaticResource Icon}" FontSize="21"/>
+                    </Button>
+                    <Button Command="{Binding ShowHistoryCommand}" ToolTip="操作记录" AutomationProperties.Name="操作记录">
+                        <Button.Style><Style TargetType="Button" BasedOn="{StaticResource RailButton}"><Style.Triggers><DataTrigger Binding="{Binding IsHistoryView}" Value="True"><Setter Property="Background" Value="#EAF1FE"/><Setter Property="Foreground" Value="#326BDE"/></DataTrigger></Style.Triggers></Style></Button.Style>
+                        <TextBlock Text="&#xE81C;" Style="{StaticResource Icon}" FontSize="21"/>
+                    </Button>
+                    <Button Command="{Binding ShowSettingsCommand}" ToolTip="设置" AutomationProperties.Name="设置">
+                        <Button.Style><Style TargetType="Button" BasedOn="{StaticResource RailButton}"><Style.Triggers><DataTrigger Binding="{Binding IsSettingsView}" Value="True"><Setter Property="Background" Value="#EAF1FE"/><Setter Property="Foreground" Value="#326BDE"/></DataTrigger></Style.Triggers></Style></Button.Style>
+                        <TextBlock Text="&#xE713;" Style="{StaticResource Icon}" FontSize="21"/>
+                    </Button>
+                    <Button x:Name="AboutNavigationButton" Command="{Binding ShowAboutCommand}" ToolTip="关于 Gameorder" AutomationProperties.Name="关于 Gameorder">
+                        <Button.Style><Style TargetType="Button" BasedOn="{StaticResource RailButton}"><Style.Triggers><DataTrigger Binding="{Binding IsAboutView}" Value="True"><Setter Property="Background" Value="#EAF1FE"/><Setter Property="Foreground" Value="#326BDE"/></DataTrigger></Style.Triggers></Style></Button.Style>
+                        <TextBlock Text="&#xE946;" Style="{StaticResource Icon}" FontSize="21"/>
+                    </Button>
+                </StackPanel>
+                <Border Grid.Row="3" BorderBrush="#E7ECF3" BorderThickness="0,1,0,0" Padding="0,22,0,0" ToolTip="{Binding ClientStatus}">
+                    <StackPanel HorizontalAlignment="Center"><Grid Width="31" Height="30"><TextBlock Text="&#xE7F4;" Style="{StaticResource Icon}" FontSize="23" Foreground="#6B7F9A" HorizontalAlignment="Center"/><Ellipse Width="8" Height="8" HorizontalAlignment="Right" VerticalAlignment="Bottom" Style="{StaticResource SessionDot}" Stroke="White" StrokeThickness="1"/></Grid><TextBlock Text="STEAM" FontSize="9" FontWeight="SemiBold" Foreground="#7C8DA5" Margin="0,9,0,0" HorizontalAlignment="Center"/></StackPanel>
+                </Border>
+            </Grid>
+        </Border>
+        <Grid x:Name="ProtectedContent" Grid.Row="1" Grid.Column="1" Margin="26,24,26,20">
+            <Grid.Style><Style TargetType="Grid"><Style.Triggers><DataTrigger Binding="{Binding IsLocked}" Value="True"><Setter Property="IsEnabled" Value="False"/><Setter Property="Visibility" Value="Hidden"/></DataTrigger><DataTrigger Binding="{Binding IsAddAccountOpen}" Value="True"><Setter Property="IsEnabled" Value="False"/></DataTrigger><DataTrigger Binding="{Binding HasManagementDialog}" Value="True"><Setter Property="IsEnabled" Value="False"/></DataTrigger><DataTrigger Binding="{Binding PendingConfirmation}" Value="True"><Setter Property="IsEnabled" Value="False"/></DataTrigger></Style.Triggers></Style></Grid.Style>
+            <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+            <Grid Margin="0,0,0,24">
+                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                <StackPanel VerticalAlignment="Center"><TextBlock Text="Gameorder" FontSize="25" FontWeight="SemiBold"/><TextBlock Foreground="#7A89A0" FontSize="12" Margin="0,5,0,0"><TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Text" Value="账号"/><Style.Triggers><DataTrigger Binding="{Binding IsHistoryView}" Value="True"><Setter Property="Text" Value="操作记录"/></DataTrigger><DataTrigger Binding="{Binding IsSettingsView}" Value="True"><Setter Property="Text" Value="设置"/></DataTrigger><DataTrigger Binding="{Binding IsAboutView}" Value="True"><Setter Property="Text" Value="关于"/></DataTrigger></Style.Triggers></Style></TextBlock.Style></TextBlock></StackPanel>
+                <Border Grid.Column="1" Background="White" BorderBrush="#E5EBF3" BorderThickness="1" CornerRadius="21" Padding="14,9" VerticalAlignment="Center" Margin="14,0,16,0" MaxWidth="250" ToolTip="{Binding GameModeHint}"><Border.Style><Style TargetType="Border"><Setter Property="Height" Value="36"/><Style.Triggers><DataTrigger Binding="{Binding IsGameRunning}" Value="True"><Setter Property="Height" Value="56"/><Setter Property="MinWidth" Value="230"/></DataTrigger></Style.Triggers></Style></Border.Style>
+                    <StackPanel><StackPanel Orientation="Horizontal"><Ellipse Width="8" Height="8" Style="{StaticResource SessionDot}" VerticalAlignment="Center" Margin="0,0,9,0"/>
+                        <TextBlock x:Name="CurrentSessionText" Text="{Binding CurrentSessionDisplay}" FontSize="12" MaxWidth="180" TextTrimming="CharacterEllipsis" ToolTip="{Binding SessionHint}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0" Visibility="{Binding IsGameRunning, Converter={StaticResource BoolVisibility}}" ToolTip="{Binding GameModeHint}"><TextBlock Text="&#xE7FC;" Style="{StaticResource Icon}" FontSize="12" Foreground="#8664C8" Margin="0,0,6,0"/><TextBlock x:Name="MainRunningGameText" Text="{Binding RunningGameName}" Width="180" FontSize="11" Foreground="#8664C8" TextTrimming="CharacterEllipsis" AutomationProperties.Name="正在运行的游戏"/></StackPanel>
+                    </StackPanel>
+                </Border>
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Visibility="{Binding IsAccountsView, Converter={StaticResource BoolVisibility}}">
+                    <Button Command="{Binding RefreshCommand}" Style="{StaticResource IconButton}" ToolTip="重新导入 Steam 账号与头像" AutomationProperties.Name="从 Steam 导入账号" Margin="0,0,9,0"><TextBlock Text="&#xE72C;" Style="{StaticResource Icon}"/></Button>
+                    <Button Command="{Binding AddAccountCommand}" Width="42" Height="42" Padding="0" Style="{StaticResource PrimaryButton}" ToolTip="添加账号" AutomationProperties.Name="添加账号"><TextBlock Text="&#xE710;" Style="{StaticResource Icon}" FontSize="18"/></Button>
+                </StackPanel>
+            </Grid>
+            <Border Grid.Row="1" Background="#FFF6E5" BorderBrush="#F0DFC0" BorderThickness="1" CornerRadius="10" Padding="14,10" Margin="0,0,0,16" Visibility="{Binding IsDemo, Converter={StaticResource BoolVisibility}}">
+                <DockPanel><TextBlock DockPanel.Dock="Left" Text="演示模式" FontWeight="SemiBold" Foreground="#855B1F" Margin="0,0,12,0"/><TextBlock Text="所有切换仅模拟" Foreground="#7B643F" FontSize="12" TextWrapping="Wrap"/></DockPanel>
+            </Border>
+            <Grid Grid.Row="2" Visibility="{Binding IsAccountsView, Converter={StaticResource BoolVisibility}}">
+                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="24"/><ColumnDefinition Width="326"/></Grid.ColumnDefinitions>
+                <Grid>
+                    <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                    <Grid Margin="0,0,12,14"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="12"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                    <Border Background="White" BorderBrush="#E0E5ED" BorderThickness="1" CornerRadius="12" Padding="13,0">
+                        <Grid>
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                            <TextBlock Text="&#xE721;" Style="{StaticResource Icon}" Foreground="#7A8799" Margin="0,0,10,0"/>
+                            <TextBox x:Name="AccountSearchBox" Grid.Column="1" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0" Padding="0,11" Background="Transparent" ToolTip="搜索显示名称、账号名称或 Steam ID" AutomationProperties.Name="搜索账号"/>
+                            <TextBlock Grid.Column="1" Text="搜索" Foreground="#7A8799" FontSize="14" VerticalAlignment="Center" IsHitTestVisible="False">
+                                <TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Opacity" Value="0"/><Style.Triggers><DataTrigger Binding="{Binding Text, ElementName=AccountSearchBox}" Value=""><Setter Property="Opacity" Value="1"/></DataTrigger></Style.Triggers></Style></TextBlock.Style>
+                            </TextBlock>
+                        </Grid>
+                    </Border>
+                        <Border Grid.Column="2" Background="#EBEFF6" CornerRadius="12" Padding="4" VerticalAlignment="Center">
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="&#xE80A;" FontFamily="Segoe MDL2 Assets" ToolTip="全部账号" AutomationProperties.Name="全部账号" Command="{Binding FilterAllCommand}"><Button.Style><Style TargetType="Button" BasedOn="{StaticResource FilterButton}"><Style.Triggers><DataTrigger Binding="{Binding FilterAll}" Value="True"><Setter Property="Background" Value="White"/><Setter Property="Foreground" Value="#285EBE"/><Setter Property="FontWeight" Value="SemiBold"/></DataTrigger></Style.Triggers></Style></Button.Style></Button>
+                                <Button Content="&#xE73E;" FontFamily="Segoe MDL2 Assets" ToolTip="已保存登录" AutomationProperties.Name="已保存登录" Command="{Binding FilterCachedCommand}"><Button.Style><Style TargetType="Button" BasedOn="{StaticResource FilterButton}"><Style.Triggers><DataTrigger Binding="{Binding FilterCached}" Value="True"><Setter Property="Background" Value="White"/><Setter Property="Foreground" Value="#285EBE"/><Setter Property="FontWeight" Value="SemiBold"/></DataTrigger></Style.Triggers></Style></Button.Style></Button>
+                                <Button Content="&#xE735;" FontFamily="Segoe MDL2 Assets" ToolTip="收藏账号" AutomationProperties.Name="收藏账号" Command="{Binding FilterFavoriteCommand}"><Button.Style><Style TargetType="Button" BasedOn="{StaticResource FilterButton}"><Style.Triggers><DataTrigger Binding="{Binding FilterFavorite}" Value="True"><Setter Property="Background" Value="White"/><Setter Property="Foreground" Value="#285EBE"/><Setter Property="FontWeight" Value="SemiBold"/></DataTrigger></Style.Triggers></Style></Button.Style></Button>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                    <Grid x:Name="FolderStrip" Grid.Row="1" Margin="0,0,12,16">
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Padding="0,0,0,4" AutomationProperties.Name="账号文件夹">
+                            <ItemsControl ItemsSource="{Binding FolderEntries}">
+                                <ItemsControl.ItemsPanel><ItemsPanelTemplate><StackPanel Orientation="Horizontal"/></ItemsPanelTemplate></ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate><DataTemplate>
+                                    <Button Style="{StaticResource FolderChip}" Command="{Binding DataContext.SelectFolderCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding Id}" ToolTip="{Binding Name}" AutomationProperties.Name="{Binding Name}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock FontFamily="Segoe MDL2 Assets" FontSize="13" VerticalAlignment="Center" Margin="0,0,7,0"><TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Text" Value="&#xE8B7;"/><Style.Triggers><DataTrigger Binding="{Binding Id}" Value="*"><Setter Property="Text" Value="&#xE80A;"/></DataTrigger><DataTrigger Binding="{Binding Id}" Value=""><Setter Property="Text" Value="&#xE8B7;"/></DataTrigger></Style.Triggers></Style></TextBlock.Style></TextBlock>
+                                            <TextBlock Text="{Binding Name}" FontSize="12" MaxWidth="105" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding AccountCount}" FontSize="10" Margin="7,0,0,0" Opacity="0.65" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Button>
+                                </DataTemplate></ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="6,0,0,0" VerticalAlignment="Top">
+                            <Button Command="{Binding CreateFolderCommand}" Style="{StaticResource IconButton}" MinHeight="35" Width="35" Height="35" Background="Transparent" BorderBrush="Transparent" ToolTip="新建账号文件夹" AutomationProperties.Name="新建账号文件夹"><TextBlock Text="&#xE8F4;" Style="{StaticResource Icon}" FontSize="16" Foreground="#6985AD"/></Button>
+                            <Button Command="{Binding RenameFolderCommand}" Style="{StaticResource FolderActionButton}" ToolTip="重命名当前文件夹" AutomationProperties.Name="重命名当前文件夹"><TextBlock Text="&#xE70F;" Style="{StaticResource Icon}" FontSize="14" Foreground="#6985AD"/></Button>
+                            <Button Command="{Binding DeleteFolderCommand}" Style="{StaticResource FolderActionButton}" ToolTip="删除当前文件夹" AutomationProperties.Name="删除当前文件夹"><TextBlock Text="&#xE74D;" Style="{StaticResource Icon}" FontSize="14" Foreground="#A77983"/></Button>
+                        </StackPanel>
+                    </Grid>
+                    <Grid Grid.Row="2">
+                        <ListBox ItemsSource="{Binding Accounts}" SelectedItem="{Binding SelectedAccount, Mode=TwoWay}" ItemContainerStyle="{StaticResource AccountTile}" BorderThickness="0" Background="Transparent" Padding="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.CanContentScroll="False" KeyboardNavigation.DirectionalNavigation="Contained" KeyboardNavigation.TabNavigation="Once" AutomationProperties.Name="Steam 账号头像网格">
+                            <ListBox.ItemsPanel><ItemsPanelTemplate><WrapPanel Orientation="Horizontal"/></ItemsPanelTemplate></ListBox.ItemsPanel>
+                            <ListBox.ItemTemplate><DataTemplate>
+                                <Grid>
+                                    <StackPanel>
+                                        <Grid Width="80" Height="80" HorizontalAlignment="Center" Margin="0,0,0,10" ToolTip="{Binding AvatarHint}">
+                                            <Border CornerRadius="40" Background="{Binding Accent}"><TextBlock Text="&#xE77B;" FontFamily="Segoe MDL2 Assets" FontSize="31" Foreground="#7187A5" HorizontalAlignment="Center" VerticalAlignment="Center"/></Border>
+                                            <Ellipse Visibility="{Binding HasAvatar, Converter={StaticResource BoolVisibility}}"><Ellipse.Fill><ImageBrush ImageSource="{Binding AvatarPath, Converter={StaticResource AvatarImage}}" Stretch="UniformToFill"/></Ellipse.Fill></Ellipse>
+                                            <Ellipse Width="17" Height="17" Stroke="White" StrokeThickness="3" HorizontalAlignment="Right" VerticalAlignment="Bottom" Style="{StaticResource PresenceDot}" ToolTip="{Binding GamePresenceHint}"/>
+                                            <Border Background="#DEFFFFFF" CornerRadius="10" Width="22" Height="22" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding AvatarLoading, Converter={StaticResource BoolVisibility}}" ToolTip="正在加载头像"><TextBlock Text="&#xE895;" Style="{StaticResource Icon}" FontSize="12" Foreground="#60718A" HorizontalAlignment="Center"/></Border>
+                                        </Grid>
+                                        <TextBlock Text="{Binding DisplayName}" FontSize="14" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" TextAlignment="Center" ToolTip="{Binding DisplayName}"/>
+                                        <TextBlock Text="{Binding AccountName}" Foreground="#77859B" FontSize="11" Margin="0,4,0,0" TextTrimming="CharacterEllipsis" TextAlignment="Center" ToolTip="{Binding AccountName}"/>
+                                        <TextBlock Text="{Binding GamePresenceLabel}" FontSize="11" Margin="0,9,0,0" TextTrimming="CharacterEllipsis" TextAlignment="Center" ToolTip="{Binding GamePresenceHint}"><TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Foreground" Value="#8190A4"/><Style.Triggers><DataTrigger Binding="{Binding IsOnline}" Value="True"><Setter Property="Foreground" Value="#258865"/></DataTrigger><DataTrigger Binding="{Binding IsOffline}" Value="True"><Setter Property="Foreground" Value="#A27C37"/></DataTrigger><DataTrigger Binding="{Binding IsPlaying}" Value="True"><Setter Property="Foreground" Value="#8664C8"/></DataTrigger></Style.Triggers></Style></TextBlock.Style></TextBlock>
+                                        <TextBlock Text="{Binding RunningGameName}" Foreground="#8664C8" FontSize="10" Margin="0,4,0,0" TextTrimming="CharacterEllipsis" TextAlignment="Center" ToolTip="{Binding GamePresenceHint}" Visibility="{Binding IsPlaying, Converter={StaticResource BoolVisibility}}"/>
+                                        <Border Margin="0,7,0,0" Padding="5,4" Background="#F1F4F9" CornerRadius="8" Visibility="{Binding HasNote, Converter={StaticResource BoolVisibility}}" ToolTip="{Binding Note}">
+                                            <TextBlock Text="{Binding NotePreview}" Foreground="#63748D" FontSize="11" LineHeight="15" MaxHeight="30" TextWrapping="Wrap" TextTrimming="CharacterEllipsis" TextAlignment="Center" AutomationProperties.Name="账号备注"/>
+                                        </Border>
+                                    </StackPanel>
+                                    <TextBlock Text="&#xE73E;" Style="{StaticResource Icon}" Foreground="#7F96B3" FontSize="11" HorizontalAlignment="Left" VerticalAlignment="Top" ToolTip="{Binding CacheLabel}" Visibility="{Binding HasCachedLogin, Converter={StaticResource BoolVisibility}}"/>
+                                    <TextBlock Text="&#xE735;" Style="{StaticResource Icon}" Foreground="#BB964B" FontSize="12" HorizontalAlignment="Right" VerticalAlignment="Top" Visibility="{Binding IsFavorite, Converter={StaticResource BoolVisibility}}" ToolTip="已收藏"/>
+                                </Grid>
+                            </DataTemplate></ListBox.ItemTemplate>
+                        </ListBox>
+                        <Border Background="#FAFBFC" BorderBrush="#E1E7EF" BorderThickness="1" CornerRadius="14" Visibility="{Binding IsEmpty, Converter={StaticResource BoolVisibility}}">
+                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" MaxWidth="280" Margin="25">
+                                <Border Width="54" Height="54" CornerRadius="17" Background="#EDF2F9" HorizontalAlignment="Center" Margin="0,0,0,17"><TextBlock Text="&#xE77B;" Style="{StaticResource Icon}" FontSize="23" Foreground="#6E88AC" HorizontalAlignment="Center"/></Border>
+                                <TextBlock Text="{Binding EmptyTitle}" FontWeight="SemiBold" FontSize="17" TextAlignment="Center" TextWrapping="Wrap"/>
+                                <TextBlock Text="{Binding EmptyDescription}" Foreground="{StaticResource Muted}" TextAlignment="Center" TextWrapping="Wrap" Margin="0,10,0,20" LineHeight="21"/>
+                                <Button Content="添加账号" Command="{Binding AddAccountCommand}" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                    <Grid Grid.Row="3" Margin="2,12,12,0"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><TextBlock Text="{Binding AccountsSummary}" Style="{StaticResource SmallLabel}" FontSize="11" TextTrimming="CharacterEllipsis"/><TextBlock Grid.Column="1" Text="&#xE91B;" Style="{StaticResource Icon}" FontSize="13" Foreground="#8493A9" Margin="8,0,0,0" ToolTip="{Binding AvatarSummary}" AutomationProperties.Name="头像加载状态" AutomationProperties.HelpText="{Binding AvatarSummary}"/></Grid>
+                </Grid>
+                <Border Grid.Column="2" Background="White" BorderBrush="#E2E8F1" BorderThickness="1" CornerRadius="20">
+                    <Grid Margin="22">
+                        <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                        <Grid Margin="0,0,0,22"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><TextBlock Text="账号" Foreground="#75859D" FontSize="12"/>
+                            <Button Grid.Column="1" Command="{Binding EditAccountCommand}" Style="{StaticResource QuietButton}" Padding="0" Width="28" Height="28" MinHeight="28" Margin="0,-6,7,-6" ToolTip="管理账号：名称、备注、文件夹" AutomationProperties.Name="管理账号" Visibility="{Binding HasSelection, Converter={StaticResource BoolVisibility}}"><TextBlock Text="&#xE70F;" Style="{StaticResource Icon}" FontSize="16" Foreground="#6985AD"/></Button>
+                            <Button Grid.Column="2" Command="{Binding ToggleFavoriteCommand}" Style="{StaticResource QuietButton}" Padding="0" Width="26" Height="26" MinHeight="26" Margin="0,-5,-3,-5" ToolTip="{Binding SelectedAccount.FavoriteLabel}" AutomationProperties.Name="收藏或取消收藏" Visibility="{Binding HasSelection, Converter={StaticResource BoolVisibility}}"><TextBlock><TextBlock.Style><Style TargetType="TextBlock" BasedOn="{StaticResource Icon}"><Setter Property="Text" Value="&#xE734;"/><Setter Property="FontSize" Value="17"/><Setter Property="Foreground" Value="#8B9AAF"/><Style.Triggers><DataTrigger Binding="{Binding SelectedAccount.IsFavorite}" Value="True"><Setter Property="Text" Value="&#xE735;"/><Setter Property="Foreground" Value="#B78D3D"/></DataTrigger></Style.Triggers></Style></TextBlock.Style></TextBlock></Button>
+                        </Grid>
+                        <StackPanel Grid.Row="1" Grid.RowSpan="2" VerticalAlignment="Center" Visibility="{Binding NoSelection, Converter={StaticResource BoolVisibility}}" Margin="12,0"><TextBlock Text="&#xE77B;" Style="{StaticResource Icon}" FontSize="32" Foreground="#9AAFC8" HorizontalAlignment="Center" Margin="0,0,0,18"/><TextBlock Text="选择账号" FontSize="17" FontWeight="SemiBold" HorizontalAlignment="Center"/><TextBlock Text="点击头像开始" Foreground="{StaticResource Muted}" FontSize="12" TextAlignment="Center" Margin="0,9,0,0"/></StackPanel>
+                        <StackPanel Grid.Row="1" Margin="0,0,0,18" Visibility="{Binding HasSelection, Converter={StaticResource BoolVisibility}}">
+                            <Grid Margin="0,0,0,20"><Grid.ColumnDefinitions><ColumnDefinition Width="72"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                <Grid Width="72" Height="72" ToolTip="{Binding SelectedAccount.AvatarHint}"><Border Background="{Binding SelectedAccount.Accent}" CornerRadius="36"><TextBlock Text="&#xE77B;" FontFamily="Segoe MDL2 Assets" FontSize="28" Foreground="#7187A5" HorizontalAlignment="Center" VerticalAlignment="Center"/></Border><Ellipse Visibility="{Binding SelectedAccount.HasAvatar, Converter={StaticResource BoolVisibility}}"><Ellipse.Fill><ImageBrush ImageSource="{Binding SelectedAccount.AvatarPath, Converter={StaticResource AvatarImage}}" Stretch="UniformToFill"/></Ellipse.Fill></Ellipse></Grid>
+                                <StackPanel Grid.Column="1" Margin="14,0,0,0" VerticalAlignment="Center"><TextBlock Text="{Binding SelectedAccount.DisplayName}" FontSize="18" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" ToolTip="{Binding SelectedAccount.DisplayName}"/><TextBlock Text="{Binding SelectedAccount.AccountName}" FontSize="11" Foreground="#7C8BA0" TextTrimming="CharacterEllipsis" Margin="0,5,0,0"/>
+                                    <StackPanel Orientation="Horizontal" Margin="0,8,0,0" ToolTip="{Binding SelectedAccount.PresenceHint}"><Ellipse Width="6" Height="6" Margin="0,0,6,0" VerticalAlignment="Center"><Ellipse.Style><Style TargetType="Ellipse"><Setter Property="Fill" Value="#ADB8C7"/><Style.Triggers><DataTrigger Binding="{Binding SelectedAccount.IsOnline}" Value="True"><Setter Property="Fill" Value="#37A77B"/></DataTrigger><DataTrigger Binding="{Binding SelectedAccount.IsOffline}" Value="True"><Setter Property="Fill" Value="#D6A251"/></DataTrigger></Style.Triggers></Style></Ellipse.Style></Ellipse><TextBlock Text="{Binding SelectedAccount.PresenceLabel}" FontSize="11" Foreground="#687C98"/></StackPanel>
+                                </StackPanel>
+                            </Grid>
+                            <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="10"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                <Button Command="{Binding OnlineCommand}" Style="{StaticResource PrimaryButton}" Padding="8,11" ToolTip="切换到此账号并在线登录" AutomationProperties.Name="在线登录"><StackPanel Orientation="Horizontal"><TextBlock Text="&#xE774;" Style="{StaticResource Icon}" FontSize="16" Margin="0,0,8,0"/><TextBlock Text="在线"/></StackPanel></Button>
+                                <Button Grid.Column="2" Command="{Binding OfflineCommand}" Padding="8,11" ToolTip="切换并离线登录；需要已保存的 Steam 离线授权" ToolTipService.ShowOnDisabled="True" AutomationProperties.Name="离线登录"><StackPanel Orientation="Horizontal"><TextBlock Text="&#xEB5E;" Style="{StaticResource Icon}" FontSize="16" Margin="0,0,8,0"/><TextBlock Text="离线"/></StackPanel></Button>
+                            </Grid>
+                            <StackPanel Orientation="Horizontal" Margin="0,11,0,0" ToolTip="切换会重启 Steam，请先保存游戏。"><TextBlock Text="&#xE7BA;" Style="{StaticResource Icon}" FontSize="11" Foreground="#A78B5D" Margin="0,0,6,0"/><TextBlock Text="切换将重启 Steam" FontSize="11" Foreground="#8D7C61"/></StackPanel>
+                        </StackPanel>
+                        <Border Grid.Row="2" BorderBrush="#E9EDF4" BorderThickness="0,1,0,0" Padding="0,18,0,0" Visibility="{Binding HasSelection, Converter={StaticResource BoolVisibility}}">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"><StackPanel>
+                                <Border Background="#F4F7FC" CornerRadius="9" Padding="10,8" Margin="0,0,0,15" ToolTip="{Binding SelectedAccount.FolderName}"><StackPanel Orientation="Horizontal"><TextBlock Text="&#xE8B7;" Style="{StaticResource Icon}" FontSize="13" Foreground="#7490B3" Margin="0,0,8,0"/><TextBlock Text="{Binding SelectedAccount.FolderName}" FontSize="12" Foreground="#627B9F" MaxWidth="214" TextTrimming="CharacterEllipsis"/></StackPanel></Border>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,18" ToolTip="{Binding SelectedAccount.CacheLabel}"><TextBlock Text="&#xE73E;" Style="{StaticResource Icon}" FontSize="13" Foreground="#7E94AF" Margin="0,0,8,0"/><TextBlock Text="{Binding SelectedAccount.CacheLabel}" FontSize="12" Foreground="#6E809A"/></StackPanel>
+                                <TextBlock Text="STEAM ID" Style="{StaticResource FieldLabel}" FontSize="10"/><TextBlock Margin="0,0,0,18" FontSize="12" TextWrapping="Wrap"><TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Text" Value="{Binding SelectedAccount.SteamId}"/><Style.Triggers><DataTrigger Binding="{Binding SelectedAccount.SteamId}" Value=""><Setter Property="Text" Value="首次登录后识别"/><Setter Property="Foreground" Value="#738197"/></DataTrigger></Style.Triggers></Style></TextBlock.Style></TextBlock>
+                                <TextBlock Text="最近登录" Style="{StaticResource FieldLabel}" FontSize="11"/><TextBlock Text="{Binding SelectedAccount.LastLoginLabel}" FontSize="12" Margin="0,0,0,20"/>
+                                <TextBlock Text="备注" Style="{StaticResource FieldLabel}" FontSize="11"/><TextBox Text="{Binding NoteDraft, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" TextWrapping="Wrap" Height="76" VerticalContentAlignment="Top" VerticalScrollBarVisibility="Auto" AutomationProperties.Name="账号备注"/>
+                                <Grid Margin="0,10,0,0"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><Button Command="{Binding RemoveAccountCommand}" Style="{StaticResource QuietButton}" Padding="0" MinHeight="34" Width="34" Height="34" HorizontalAlignment="Left" ToolTip="移除账号" AutomationProperties.Name="移除账号"><TextBlock Text="&#xE74D;" Style="{StaticResource Icon}" FontSize="15" Foreground="#AD6E76"/></Button><Button Grid.Column="1" Command="{Binding SaveNoteCommand}" Padding="0" MinHeight="34" Width="34" Height="34" ToolTip="保存备注" AutomationProperties.Name="保存备注"><TextBlock Text="&#xE74E;" Style="{StaticResource Icon}" FontSize="15"/></Button></Grid>
+                            </StackPanel></ScrollViewer>
+                        </Border>
+                        <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0,17,0,0" ToolTip="登录验证在 Steam 内完成；离线模式需已保存的本机授权。"><TextBlock Text="&#xE72E;" Style="{StaticResource Icon}" FontSize="12" Foreground="#8DA0BA" Margin="0,0,7,0"/><TextBlock Text="Steam 验证" Foreground="#8A9AB0" FontSize="11"/></StackPanel>
+                    </Grid>
+                </Border>
+            </Grid>
+            <Border Grid.Row="2" Background="White" BorderBrush="#E0E5ED" BorderThickness="1" CornerRadius="18" Visibility="{Binding IsHistoryView, Converter={StaticResource BoolVisibility}}">
+                <Grid Margin="24"><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+                    <Grid Margin="0,0,0,17"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><StackPanel Orientation="Horizontal"><TextBlock Text="操作记录" FontWeight="SemiBold" FontSize="18"/><TextBlock Text="{Binding ActivityCountSummary}" FontSize="11" Foreground="#8A9CB6" Margin="12,0,0,0" VerticalAlignment="Center"/></StackPanel>
+                        <Border Grid.Column="1" Width="230" Margin="12,0,12,0" Background="#F8FAFD" BorderBrush="#E2E9F3" BorderThickness="1" CornerRadius="10"><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="30"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions><TextBlock Text="&#xE721;" Style="{StaticResource Icon}" FontSize="13" Foreground="#8A9BB3" HorizontalAlignment="Center"/><TextBox x:Name="ActivitySearchBox" Grid.Column="1" Text="{Binding ActivitySearchText, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0" Background="Transparent" Height="36" Padding="0,7,8,7" FontSize="12" ToolTip="搜索操作、账号或分组" AutomationProperties.Name="搜索操作记录"/><TextBlock Grid.Column="1" Text="搜索" FontSize="12" Foreground="#A0ADC0" VerticalAlignment="Center" IsHitTestVisible="False"><TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Visibility" Value="Collapsed"/><Style.Triggers><DataTrigger Binding="{Binding ActivitySearchText}" Value=""><Setter Property="Visibility" Value="Visible"/></DataTrigger></Style.Triggers></Style></TextBlock.Style></TextBlock></Grid></Border>
+                        <Button x:Name="ClearActivityButton" Grid.Column="2" Command="{Binding ClearActivityCommand}" Style="{StaticResource IconButton}" Width="36" Height="36" MinHeight="36" ToolTip="清理当前筛选记录" AutomationProperties.Name="清理当前筛选记录"><TextBlock Text="&#xE74D;" Style="{StaticResource Icon}" FontSize="15"/></Button>
+                    </Grid>
+                    <WrapPanel Grid.Row="1" Margin="0,0,0,13">
+                        <Button Command="{Binding FilterActivityCommand}" CommandParameter="all" Margin="0,0,7,6" MinHeight="32" Padding="10,5" ToolTip="全部操作"><Button.Style><Style TargetType="Button" BasedOn="{StaticResource ButtonBase}"><Setter Property="Foreground" Value="#7A8CA7"/><Setter Property="Background" Value="#F7F9FC"/><Style.Triggers><DataTrigger Binding="{Binding ActivityCategory}" Value="all"><Setter Property="Foreground" Value="#326BDE"/><Setter Property="Background" Value="#EAF1FE"/><Setter Property="BorderBrush" Value="#D2E0F7"/></DataTrigger></Style.Triggers></Style></Button.Style><StackPanel Orientation="Horizontal"><TextBlock Text="&#xE8A5;" Style="{StaticResource Icon}" FontSize="12" Margin="0,0,6,0"/><TextBlock Text="全部" FontSize="11"/></StackPanel></Button>
+                        <Button Command="{Binding FilterActivityCommand}" CommandParameter="login" Margin="0,0,7,6" MinHeight="32" Padding="10,5" ToolTip="登录操作"><Button.Style><Style TargetType="Button" BasedOn="{StaticResource ButtonBase}"><Setter Property="Foreground" Value="#7A8CA7"/><Setter Property="Background" Value="#F7F9FC"/><Style.Triggers><DataTrigger Binding="{Binding ActivityCategory}" Value="login"><Setter Property="Foreground" Value="#326BDE"/><Setter Property="Background" Value="#EAF1FE"/><Setter Property="BorderBrush" Value="#D2E0F7"/></DataTrigger></Style.Triggers></Style></Button.Style><StackPanel Orientation="Horizontal"><TextBlock Text="&#xE774;" Style="{StaticResource Icon}" FontSize="12" Margin="0,0,6,0"/><TextBlock Text="登录" FontSize="11"/></StackPanel></Button>
+                        <Button Command="{Binding FilterActivityCommand}" CommandParameter="account" Margin="0,0,7,6" MinHeight="32" Padding="10,5" ToolTip="账号操作"><Button.Style><Style TargetType="Button" BasedOn="{StaticResource ButtonBase}"><Setter Property="Foreground" Value="#7A8CA7"/><Setter Property="Background" Value="#F7F9FC"/><Style.Triggers><DataTrigger Binding="{Binding ActivityCategory}" Value="account"><Setter Property="Foreground" Value="#326BDE"/><Setter Property="Background" Value="#EAF1FE"/><Setter Property="BorderBrush" Value="#D2E0F7"/></DataTrigger></Style.Triggers></Style></Button.Style><StackPanel Orientation="Horizontal"><TextBlock Text="&#xE77B;" Style="{StaticResource Icon}" FontSize="12" Margin="0,0,6,0"/><TextBlock Text="账号" FontSize="11"/></StackPanel></Button>
+                        <Button Command="{Binding FilterActivityCommand}" CommandParameter="group" Margin="0,0,7,6" MinHeight="32" Padding="10,5" ToolTip="分组操作"><Button.Style><Style TargetType="Button" BasedOn="{StaticResource ButtonBase}"><Setter Property="Foreground" Value="#7A8CA7"/><Setter Property="Background" Value="#F7F9FC"/><Style.Triggers><DataTrigger Binding="{Binding ActivityCategory}" Value="group"><Setter Property="Foreground" Value="#326BDE"/><Setter Property="Background" Value="#EAF1FE"/><Setter Property="BorderBrush" Value="#D2E0F7"/></DataTrigger></Style.Triggers></Style></Button.Style><StackPanel Orientation="Horizontal"><TextBlock Text="&#xE8B7;" Style="{StaticResource Icon}" FontSize="12" Margin="0,0,6,0"/><TextBlock Text="分组" FontSize="11"/></StackPanel></Button>
+                        <Button Command="{Binding FilterActivityCommand}" CommandParameter="settings" Margin="0,0,7,6" MinHeight="32" Padding="10,5" ToolTip="设置操作"><Button.Style><Style TargetType="Button" BasedOn="{StaticResource ButtonBase}"><Setter Property="Foreground" Value="#7A8CA7"/><Setter Property="Background" Value="#F7F9FC"/><Style.Triggers><DataTrigger Binding="{Binding ActivityCategory}" Value="settings"><Setter Property="Foreground" Value="#326BDE"/><Setter Property="Background" Value="#EAF1FE"/><Setter Property="BorderBrush" Value="#D2E0F7"/></DataTrigger></Style.Triggers></Style></Button.Style><StackPanel Orientation="Horizontal"><TextBlock Text="&#xE713;" Style="{StaticResource Icon}" FontSize="12" Margin="0,0,6,0"/><TextBlock Text="设置" FontSize="11"/></StackPanel></Button>
+                        <Button Command="{Binding FilterActivityCommand}" CommandParameter="other" Margin="0,0,7,6" MinHeight="32" Padding="10,5" ToolTip="其他操作"><Button.Style><Style TargetType="Button" BasedOn="{StaticResource ButtonBase}"><Setter Property="Foreground" Value="#7A8CA7"/><Setter Property="Background" Value="#F7F9FC"/><Style.Triggers><DataTrigger Binding="{Binding ActivityCategory}" Value="other"><Setter Property="Foreground" Value="#326BDE"/><Setter Property="Background" Value="#EAF1FE"/><Setter Property="BorderBrush" Value="#D2E0F7"/></DataTrigger></Style.Triggers></Style></Button.Style><StackPanel Orientation="Horizontal"><TextBlock Text="&#xE712;" Style="{StaticResource Icon}" FontSize="12" Margin="0,0,6,0"/><TextBlock Text="其他" FontSize="11"/></StackPanel></Button>
+                    </WrapPanel>
+                    <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"><ItemsControl x:Name="OperationRecordsList" ItemsSource="{Binding ActivityView}"><ItemsControl.ItemTemplate><DataTemplate>
+                        <Border BorderBrush="#E8EDF3" BorderThickness="0,0,0,1" Padding="0,15"><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="36"/><ColumnDefinition Width="*"/><ColumnDefinition Width="120"/></Grid.ColumnDefinitions>
+                            <Border Width="29" Height="29" CornerRadius="10" Background="#EDF3FC" VerticalAlignment="Top"><TextBlock FontFamily="Segoe MDL2 Assets" FontSize="13" HorizontalAlignment="Center" VerticalAlignment="Center"><TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Text" Value="&#xE81C;"/><Setter Property="Foreground" Value="#6C8ABB"/><Style.Triggers><DataTrigger Binding="{Binding EffectiveCategory}" Value="account"><Setter Property="Text" Value="&#xE77B;"/></DataTrigger><DataTrigger Binding="{Binding EffectiveCategory}" Value="group"><Setter Property="Text" Value="&#xE8B7;"/></DataTrigger><DataTrigger Binding="{Binding EffectiveCategory}" Value="settings"><Setter Property="Text" Value="&#xE713;"/></DataTrigger><DataTrigger Binding="{Binding Kind}" Value="error"><Setter Property="Text" Value="&#xE783;"/><Setter Property="Foreground" Value="#AD5258"/></DataTrigger></Style.Triggers></Style></TextBlock.Style></TextBlock></Border>
+                            <StackPanel Grid.Column="1" Margin="7,0,15,0"><StackPanel Orientation="Horizontal"><TextBlock Text="{Binding Title}" FontWeight="SemiBold" FontSize="13"/><TextBlock Text="{Binding CategoryLabel}" Foreground="#97A6BD" FontSize="10" Margin="10,0,0,0" VerticalAlignment="Center"/></StackPanel><TextBlock Text="{Binding Description}" Foreground="{StaticResource Muted}" TextWrapping="Wrap" FontSize="12" Margin="0,5,0,0" LineHeight="20"/></StackPanel>
+                            <TextBlock Grid.Column="2" Text="{Binding TimeLabel}" FontSize="11" Foreground="#8393AA" HorizontalAlignment="Right" Margin="0,2,0,0"/>
+                        </Grid></Border>
+                    </DataTemplate></ItemsControl.ItemTemplate></ItemsControl></ScrollViewer>
+                    <StackPanel Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding ActivityEmpty, Converter={StaticResource BoolVisibility}}"><TextBlock Text="&#xE81C;" Style="{StaticResource Icon}" Foreground="#BAC8DB" FontSize="28" HorizontalAlignment="Center" Margin="0,0,0,14"/><TextBlock Text="{Binding ActivityEmptyTitle}" FontSize="16" Foreground="#8295B2" TextAlignment="Center"/></StackPanel>
+                </Grid>
+            </Border>
+            <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Visibility="{Binding IsSettingsView, Converter={StaticResource BoolVisibility}}">
+                <StackPanel>
+                    <Border Background="White" BorderBrush="#E0E5ED" BorderThickness="1" CornerRadius="18" Padding="26" Margin="0,0,0,18">
+                        <StackPanel>
+                            <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="46"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><Border Width="34" Height="34" Background="#EDF3FE" CornerRadius="11" VerticalAlignment="Center"><TextBlock Text="&#xE7F4;" Style="{StaticResource Icon}" Foreground="#5680C2" FontSize="17" HorizontalAlignment="Center"/></Border><StackPanel Grid.Column="1" Margin="0,0,16,0"><TextBlock Text="任务栏组件" FontSize="18" FontWeight="SemiBold"/><TextBlock Text="{Binding TaskbarWidgetDockLabel}" FontSize="11" Foreground="#8396B2" Margin="0,5,0,0"/></StackPanel><ToggleButton x:Name="TaskbarWidgetToggle" Grid.Column="2" Style="{StaticResource TaskbarWidgetSwitch}" IsChecked="{Binding TaskbarWidgetEnabled,Mode=TwoWay}" IsEnabled="{Binding IsNotBusy}" VerticalAlignment="Center" ToolTip="显示或隐藏任务栏组件" AutomationProperties.Name="启用任务栏组件"/></Grid>
+                            <StackPanel Orientation="Horizontal" Margin="0,22,0,0">
+                                <Button x:Name="TaskbarDockLeftButton" Command="{Binding TaskbarDockLeftCommand}" ToolTip="放在任务栏左侧预设空位" AutomationProperties.Name="任务栏左侧位置" Margin="0,0,9,0"><Button.Style><Style TargetType="Button" BasedOn="{StaticResource TaskbarDockChoice}"><Style.Triggers><DataTrigger Binding="{Binding TaskbarWidgetDockIsLeft}" Value="True"><Setter Property="Background" Value="#EAF1FE"/><Setter Property="Foreground" Value="#326BDE"/><Setter Property="BorderBrush" Value="#C9DBF7"/></DataTrigger></Style.Triggers></Style></Button.Style><StackPanel Orientation="Horizontal"><TextBlock Text="&#xE8F9;" Style="{StaticResource Icon}" FontSize="13" Margin="0,0,8,0"/><TextBlock Text="左侧"/></StackPanel></Button>
+                                <Button x:Name="TaskbarDockTrayButton" Command="{Binding TaskbarDockTrayCommand}" ToolTip="放在系统托盘旁的预设空位" AutomationProperties.Name="托盘侧位置"><Button.Style><Style TargetType="Button" BasedOn="{StaticResource TaskbarDockChoice}"><Style.Triggers><DataTrigger Binding="{Binding TaskbarWidgetDockIsTray}" Value="True"><Setter Property="Background" Value="#EAF1FE"/><Setter Property="Foreground" Value="#326BDE"/><Setter Property="BorderBrush" Value="#C9DBF7"/></DataTrigger></Style.Triggers></Style></Button.Style><StackPanel Orientation="Horizontal"><TextBlock Text="&#xE8FA;" Style="{StaticResource Icon}" FontSize="13" Margin="0,0,8,0"/><TextBlock Text="托盘侧"/></StackPanel></Button>
+                            </StackPanel>
+                            <Border x:Name="GamePauseSettingsNotice" Background="#F3EEFC" CornerRadius="10" Padding="12,9" Margin="0,14,0,0" Visibility="{Binding IsGameRunning, Converter={StaticResource BoolVisibility}}" ToolTip="{Binding GameModeHint}"><StackPanel Orientation="Horizontal"><TextBlock Text="&#xE7FC;" Style="{StaticResource Icon}" FontSize="14" Foreground="#8664C8" Margin="0,0,8,0"/><TextBlock Text="游戏中 · 后台优化，组件暂时隐藏" FontSize="12" Foreground="#8664C8"/></StackPanel></Border>
+                            <TextBlock Text="拖动组件空白处，靠近虚线框后松手" FontSize="12" Foreground="#8698B1" Margin="0,14,0,0" TextWrapping="Wrap"/>
+                            <TextBlock Text="{Binding TaskbarWidgetSettingsMessage}" FontSize="11" Foreground="#8396B2" Margin="0,7,0,0" TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </Border>
+                    <Border x:Name="SecuritySettingsCard" Background="White" BorderBrush="#E0E5ED" BorderThickness="1" CornerRadius="18" Padding="26" Margin="0,0,0,18" AutomationProperties.Name="安全与应用锁">
+                        <StackPanel>
+                            <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="46"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><Border Width="34" Height="34" Background="#EDF3FE" CornerRadius="11"><TextBlock Text="&#xE72E;" Style="{StaticResource Icon}" FontSize="18" Foreground="#5680C2" HorizontalAlignment="Center"/></Border><StackPanel Grid.Column="1"><TextBlock Text="应用锁" FontSize="18" FontWeight="SemiBold"/><TextBlock Text="{Binding AppLockStatus}" FontSize="11" Foreground="#8396B2" Margin="0,5,0,0"/></StackPanel><Button Grid.Column="2" Command="{Binding AppLockSettingsCommand}" Content="{Binding AppLockActionLabel}" MinHeight="35" Padding="13,8" ToolTip="设置或更改 Gameorder 应用密码"/></Grid>
+                            <StackPanel Orientation="Horizontal" Margin="0,17,0,0" Visibility="{Binding AppLockEnabled,Converter={StaticResource BoolVisibility}}"><Button Command="{Binding LockNowCommand}" Style="{StaticResource QuietButton}" MinHeight="32" Padding="8,6" ToolTip="立即锁定 Gameorder" AutomationProperties.Name="立即锁定"><StackPanel Orientation="Horizontal"><TextBlock Text="&#xE72E;" Style="{StaticResource Icon}" FontSize="13" Margin="0,0,7,0"/><TextBlock Text="锁定" FontSize="12"/></StackPanel></Button><Button x:Name="PasswordHintSettingsButton" Command="{Binding ChangePasswordHintCommand}" Style="{StaticResource QuietButton}" MinHeight="32" Padding="8,6" Margin="9,0,0,0" ToolTip="验证当前密码后修改密码提示" AutomationProperties.Name="修改密码提示"><StackPanel Orientation="Horizontal"><TextBlock Text="&#xE897;" Style="{StaticResource Icon}" FontSize="14" Margin="0,0,7,0"/><TextBlock Text="密码提示" FontSize="12"/></StackPanel></Button><Button Command="{Binding DisableLockCommand}" Style="{StaticResource QuietButton}" MinHeight="32" Padding="8,6" Margin="9,0,0,0" ToolTip="验证当前密码后关闭应用锁"><TextBlock Text="&#xE785;" Style="{StaticResource Icon}" FontSize="14"/></Button></StackPanel>
+                            <Grid Margin="0,15,0,0" Visibility="{Binding AppLockEnabled,Converter={StaticResource BoolVisibility}}"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="150"/></Grid.ColumnDefinitions><StackPanel VerticalAlignment="Center"><TextBlock Text="后台延迟锁" FontSize="12" Foreground="#60738E"/><TextBlock Text="关闭或最小化后开始计时" FontSize="10" Foreground="#91A1B9" Margin="0,4,0,0"/></StackPanel><ComboBox x:Name="AppLockDelaySelector" Grid.Column="1" ItemsSource="{Binding AppLockDelayOptions}" DisplayMemberPath="Label" SelectedValuePath="Minutes" SelectedValue="{Binding AppLockDelayMinutes,Mode=TwoWay}" IsEnabled="{Binding AppLockControlEnabled}" MinHeight="32" AutomationProperties.Name="后台延迟锁"/></Grid>
+                            <Border Background="#F5F8FC" CornerRadius="10" Padding="10,8" Margin="0,15,0,0" ToolTip="{Binding DataProtectionStatus}"><StackPanel Orientation="Horizontal"><TextBlock Text="&#xE8D7;" Style="{StaticResource Icon}" FontSize="12" Foreground="#7B9A87" Margin="0,0,7,0"/><TextBlock Text="{Binding DataProtectionStatus}" FontSize="11" Foreground="#8396B2" TextWrapping="Wrap"/></StackPanel></Border>
+                        </StackPanel>
+                    </Border>
+                    <Border Background="White" BorderBrush="#E0E5ED" BorderThickness="1" CornerRadius="18" Padding="26" Margin="0,0,0,18">
+                        <StackPanel><TextBlock Text="Steam 客户端" FontSize="18" FontWeight="SemiBold"/><TextBlock Text="选择 Steam 安装目录。" Foreground="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,8,0,24"/>
+                            <TextBlock Text="Steam 安装目录" Style="{StaticResource FieldLabel}"/>
+                            <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><TextBox Text="{Binding SteamPath, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="Steam 安装目录"/><Button Grid.Column="1" Content="&#xE838;" FontFamily="Segoe MDL2 Assets" ToolTip="浏览安装目录" AutomationProperties.Name="浏览安装目录" Command="{Binding BrowseSteamCommand}" Margin="10,0,0,0"/></Grid>
+                            <TextBlock Text="{Binding SteamStatus}" Foreground="#5E7089" FontSize="12" Margin="0,12,0,0" TextWrapping="Wrap"/>
+                            <StackPanel Orientation="Horizontal" Margin="0,23,0,0"><Button Content="保存" ToolTip="保存安装目录并读取账号" AutomationProperties.Name="保存并读取账号" Command="{Binding SaveSettingsCommand}" Style="{StaticResource PrimaryButton}"/><Button Content="&#xE721;" FontFamily="Segoe MDL2 Assets" ToolTip="自动查找 Steam" AutomationProperties.Name="自动查找 Steam" Command="{Binding DetectSteamCommand}" Margin="10,0,0,0"/></StackPanel>
+                            <TextBlock Text="{Binding SettingsMessage}" Foreground="#526E99" TextWrapping="Wrap" Margin="0,14,0,0"/>
+                        </StackPanel>
+                    </Border>
+                    <Border Background="White" BorderBrush="#E0E5ED" BorderThickness="1" CornerRadius="18" Padding="26" Margin="0,0,0,18"><StackPanel><TextBlock Text="配置恢复" FontSize="18" FontWeight="SemiBold"/><TextBlock Text="切换前自动备份，可恢复最近配置。" Foreground="{StaticResource Muted}" TextWrapping="Wrap" LineHeight="23" Margin="0,8,0,19"/><Button Content="恢复最近备份" Command="{Binding RestoreBackupCommand}" HorizontalAlignment="Left" ToolTip="请先退出 Steam；没有备份时不可恢复。" ToolTipService.ShowOnDisabled="True"/><TextBlock Text="请先退出 Steam；没有备份时不可恢复。" Foreground="{StaticResource Muted}" FontSize="12" Margin="0,12,0,0" TextWrapping="Wrap"/></StackPanel></Border>
+                    <Border Background="#EDF2F8" CornerRadius="12" Padding="20"><StackPanel><TextBlock Text="关于登录" FontWeight="SemiBold" Margin="0,0,0,8"/><TextBlock Text="Gameorder 管理本机账号。密码与 Steam Guard 验证在 Steam 完成；离线模式需要本机已保存授权。" TextWrapping="Wrap" Foreground="#607089" LineHeight="23" FontSize="12"/></StackPanel></Border>
+                    <Button x:Name="ExitApplicationButton" Click="ExitApplicationClick" IsEnabled="{Binding IsNotBusy}" HorizontalAlignment="Left" Style="{StaticResource QuietButton}" Margin="0,12,0,0" Padding="8,7" MinHeight="30" Foreground="#987C8C" ToolTip="退出 Gameorder" AutomationProperties.Name="退出 Gameorder"><StackPanel Orientation="Horizontal"><TextBlock Text="&#xE8BB;" Style="{StaticResource Icon}" FontSize="12" Margin="0,0,7,0"/><TextBlock Text="退出 Gameorder" FontSize="11"/></StackPanel></Button>
+                </StackPanel>
+            </ScrollViewer>
+            <ScrollViewer x:Name="AboutPage" Grid.Row="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Visibility="{Binding IsAboutView, Converter={StaticResource BoolVisibility}}" AutomationProperties.Name="关于页面" Margin="0,0,4,0">
+                <StackPanel>
+                    <Border x:Name="AboutHeroCard" BorderBrush="#DBE5F3" BorderThickness="1" CornerRadius="24" Padding="30" Margin="0,0,0,20">
+                        <Border.Background><LinearGradientBrush StartPoint="0,0" EndPoint="1,1"><GradientStop Color="#FFFFFF" Offset="0"/><GradientStop Color="#F0F5FE" Offset="0.7"/><GradientStop Color="#E6EFFD" Offset="1"/></LinearGradientBrush></Border.Background>
+                        <StackPanel>
+                            <Grid Margin="0,0,0,30">
+                                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                <StackPanel Orientation="Horizontal"><Image Source="assets/Gameorder.png" Width="36" Height="36" Margin="0,0,12,0"/><TextBlock Text="Gameorder" FontSize="27" FontWeight="SemiBold" VerticalAlignment="Center"/></StackPanel>
+                                <Border Grid.Column="1" Background="#FFFFFF" BorderBrush="#D9E6F9" BorderThickness="1" CornerRadius="11" Padding="12,7" VerticalAlignment="Center"><TextBlock x:Name="AppVersionText" Text="{Binding AppVersion}" Foreground="#5B7CA9" FontSize="13" FontWeight="SemiBold" AutomationProperties.Name="软件版本"/></Border>
+                            </Grid>
+                            <Grid>
+                                <Grid.ColumnDefinitions><ColumnDefinition Width="132"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                <Grid Width="112" Height="112" HorizontalAlignment="Left">
+                                    <Ellipse Fill="#DCE8FA"/>
+                                    <Image x:Name="CreatorAvatar" Source="{StaticResource CreatorAvatarPreview}" Width="104" Height="104" Stretch="UniformToFill" HorizontalAlignment="Center" VerticalAlignment="Center" AutomationProperties.Name="XIAOYING223 的头像">
+                                        <Image.Clip><EllipseGeometry Center="52,52" RadiusX="52" RadiusY="52"/></Image.Clip>
+                                    </Image>
+                                </Grid>
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock Text="开发者" FontSize="12" Foreground="#8295B1" Margin="0,0,0,7"/>
+                                    <TextBlock x:Name="CreatorNameText" Text="{Binding AuthorName}" FontFamily="Segoe UI" FontSize="31" FontWeight="SemiBold" Foreground="#24456F" AutomationProperties.Name="作者署名"/>
+                                    <TextBlock Text="让每次切换，都顺手一点。" FontSize="14" Foreground="#6B83A4" Margin="0,10,0,0" TextWrapping="Wrap"/>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                    <Border Background="White" BorderBrush="#E0E5ED" BorderThickness="1" CornerRadius="22" Padding="28">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,24"><Border Background="#EEF4FE" CornerRadius="11" Width="34" Height="34" Margin="0,0,12,0"><TextBlock Text="&#xE81C;" Style="{StaticResource Icon}" FontSize="17" Foreground="#6489C3" HorizontalAlignment="Center"/></Border><TextBlock Text="更新日志" FontSize="20" FontWeight="SemiBold" VerticalAlignment="Center"/></StackPanel>
+                            <ItemsControl x:Name="ReleaseNotesList" ItemsSource="{Binding ReleaseNotes}" AutomationProperties.Name="版本更新日志">
+                                <ItemsControl.ItemTemplate><DataTemplate>
+                                    <Grid Margin="0,0,0,24">
+                                        <Grid.ColumnDefinitions><ColumnDefinition Width="18"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                        <Grid><Border Width="1" Background="#E5ECF6" HorizontalAlignment="Center" Margin="0,14,0,0"/><Ellipse Width="8" Height="8" Fill="#85A6D9" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,9,0,0"/></Grid>
+                                        <StackPanel Grid.Column="1" Margin="15,0,0,0">
+                                            <WrapPanel VerticalAlignment="Center"><TextBlock Text="{Binding Version, StringFormat=v{0}}" FontSize="16" FontWeight="SemiBold" Foreground="#386BAC" Margin="0,0,12,0"/><TextBlock Text="{Binding Title}" FontSize="15" FontWeight="SemiBold" Foreground="#4C6380" Margin="0,0,12,0"/><Border Background="#EEF6F0" CornerRadius="6" Padding="7,3" Visibility="{Binding IsLatest, Converter={StaticResource BoolVisibility}}"><TextBlock Text="当前" FontSize="10" Foreground="#5A9473"/></Border></WrapPanel>
+                                            <ItemsControl ItemsSource="{Binding Changes}" Margin="0,10,0,0"><ItemsControl.ItemTemplate><DataTemplate><TextBlock Text="{Binding}" Foreground="#7C8CA2" FontSize="13" LineHeight="23" TextWrapping="Wrap"/></DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
+                                        </StackPanel>
+                                    </Grid>
+                                </DataTemplate></ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <Expander x:Name="DevelopmentHistoryExpander" Header="开发历程 · 0.1–1.8" Foreground="#5D779D" FontSize="13" Padding="0,12,0,0" BorderThickness="0,1,0,0" BorderBrush="#E6EDF6">
+                                <StackPanel Margin="0,18,0,0">
+                                    <TextBlock Text="{Binding DevelopmentHistoryLabel}" FontSize="13" FontWeight="SemiBold" Foreground="#607B9E" TextWrapping="Wrap"/>
+                                    
+                                    <ItemsControl x:Name="DevelopmentStagesList" ItemsSource="{Binding DevelopmentStages}"><ItemsControl.ItemTemplate><DataTemplate>
+                                        <Grid Margin="0,0,0,15"><Grid.ColumnDefinitions><ColumnDefinition Width="52"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                            <TextBlock Text="{Binding Version, StringFormat=v{0}}" FontSize="13" FontWeight="SemiBold" Foreground="#7296CC"/>
+                                            <StackPanel Grid.Column="1"><TextBlock Text="{Binding Title}" FontSize="13" FontWeight="SemiBold" Foreground="#607B9E"/><ItemsControl ItemsSource="{Binding Changes}" Margin="0,4,0,0"><ItemsControl.ItemTemplate><DataTemplate><TextBlock Text="{Binding}" FontSize="11" Foreground="#8B9AAF" TextWrapping="Wrap" LineHeight="19"/></DataTemplate></ItemsControl.ItemTemplate></ItemsControl></StackPanel>
+                                        </Grid>
+                                    </DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
+                                </StackPanel>
+                            </Expander>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+            <Border Grid.Row="3" BorderThickness="1" CornerRadius="12" Padding="16,13" Margin="0,18,0,0" Visibility="{Binding OperationVisible, Converter={StaticResource BoolVisibility}}">
+                <Border.Style><Style TargetType="Border"><Setter Property="Background" Value="#EDF3FE"/><Setter Property="BorderBrush" Value="#D2E0F9"/><Style.Triggers><DataTrigger Binding="{Binding StatusKind}" Value="error"><Setter Property="Background" Value="#FFF1EF"/><Setter Property="BorderBrush" Value="#F0D5D0"/></DataTrigger><DataTrigger Binding="{Binding StatusKind}" Value="success"><Setter Property="Background" Value="#EDF7F1"/><Setter Property="BorderBrush" Value="#D4E8DB"/></DataTrigger></Style.Triggers></Style></Border.Style>
+                <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><StackPanel><TextBlock Text="{Binding StatusTitle}" FontWeight="SemiBold" FontSize="13"/><TextBlock Text="{Binding StatusMessage}" Foreground="#5E7089" FontSize="12" TextWrapping="Wrap" Margin="0,5,14,0"/><ProgressBar Height="3" IsIndeterminate="True" Margin="0,11,16,0" Foreground="#326BDE" Background="#D9E5F8" Visibility="{Binding IsBusy, Converter={StaticResource BoolVisibility}}"/></StackPanel><Button Grid.Column="1" Content="&#xE711;" FontFamily="Segoe MDL2 Assets" FontSize="12" Style="{StaticResource QuietButton}" Command="{Binding DismissStatusCommand}" Padding="7" MinHeight="30" Width="30" VerticalAlignment="Top" AutomationProperties.Name="关闭状态提示" ToolTip="关闭提示"/></Grid>
+            </Border>
+        </Grid>
+        <Grid x:Name="FolderDialog" Grid.Row="1" Grid.ColumnSpan="2" Background="#70232E42" Visibility="{Binding IsFolderDialogOpen, Converter={StaticResource BoolVisibility}}">
+            <Border Width="430" MaxHeight="590" Margin="20" Background="White" BorderBrush="#E3E8F0" BorderThickness="1" CornerRadius="20" Padding="28" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"><StackPanel>
+                    <Grid Margin="0,0,0,24"><Grid.ColumnDefinitions><ColumnDefinition Width="46"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions><Border Width="38" Height="38" Background="#EDF3FE" CornerRadius="12"><TextBlock Text="&#xE8B7;" Style="{StaticResource Icon}" FontSize="18" Foreground="#4776C5" HorizontalAlignment="Center"/></Border><TextBlock Grid.Column="1" Text="{Binding FolderDialogTitle}" FontSize="21" FontWeight="SemiBold" VerticalAlignment="Center" Margin="6,0,0,0"/></Grid>
+                    <TextBlock Text="文件夹名称" Style="{StaticResource FieldLabel}"/>
+                    <TextBox Text="{Binding FolderDraftName, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="文件夹名称" MaxLength="64"/>
+                    <TextBlock Text="{Binding FolderFormError}" Foreground="#AA4E52" FontSize="12" TextWrapping="Wrap" Margin="0,12,0,0"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,24,0,0"><Button Content="取消" Command="{Binding CloseFolderCommand}" Margin="0,0,10,0"/><Button Content="保存" Command="{Binding SaveFolderCommand}" Style="{StaticResource PrimaryButton}"/></StackPanel>
+                </StackPanel></ScrollViewer>
+            </Border>
+        </Grid>
+        <Grid x:Name="AccountEditDialog" Grid.Row="1" Grid.ColumnSpan="2" Background="#70232E42" Visibility="{Binding IsEditAccountOpen, Converter={StaticResource BoolVisibility}}">
+            <Border Width="470" MaxHeight="590" Margin="20" Background="White" BorderBrush="#E3E8F0" BorderThickness="1" CornerRadius="20" Padding="28" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Grid><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                    <Grid Margin="0,0,0,24"><Grid.ColumnDefinitions><ColumnDefinition Width="46"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions><Border Width="38" Height="38" Background="#EDF3FE" CornerRadius="12"><TextBlock Text="&#xE70F;" Style="{StaticResource Icon}" FontSize="18" Foreground="#4776C5" HorizontalAlignment="Center"/></Border><StackPanel Grid.Column="1" Margin="6,0,0,0"><TextBlock Text="管理账号" FontSize="21" FontWeight="SemiBold"/><TextBlock Text="{Binding SelectedAccount.AccountName}" FontSize="11" Foreground="#8492A7" TextTrimming="CharacterEllipsis" Margin="0,4,0,0"/></StackPanel></Grid>
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"><StackPanel Margin="0,0,4,0">
+                        <TextBlock Text="显示名称" Style="{StaticResource FieldLabel}"/><TextBox Text="{Binding EditDisplayName, UpdateSourceTrigger=PropertyChanged}" Height="44" MaxLength="80" AutomationProperties.Name="编辑显示名称" Margin="0,0,0,20"/>
+                        <TextBlock Text="文件夹" Style="{StaticResource FieldLabel}"/><ComboBox ItemsSource="{Binding FolderChoices}" SelectedItem="{Binding EditFolderChoice, Mode=TwoWay}" AutomationProperties.Name="账号文件夹" Margin="0,0,0,20"><ComboBox.ItemTemplate><DataTemplate><TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis"/></DataTemplate></ComboBox.ItemTemplate></ComboBox>
+                        <TextBlock Text="备注" Style="{StaticResource FieldLabel}"/><TextBox Text="{Binding EditNote, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" TextWrapping="Wrap" Height="100" VerticalContentAlignment="Top" VerticalScrollBarVisibility="Auto" AutomationProperties.Name="编辑账号备注"/>
+                        <TextBlock Text="{Binding EditFormError}" Foreground="#AA4E52" FontSize="12" TextWrapping="Wrap" Margin="0,12,0,0"/>
+                    </StackPanel></ScrollViewer>
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,22,0,0"><Button Content="取消" Command="{Binding CloseEditAccountCommand}" Margin="0,0,10,0"/><Button Content="保存" Command="{Binding SaveEditAccountCommand}" Style="{StaticResource PrimaryButton}"/></StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+        <Grid Grid.Row="1" Grid.ColumnSpan="2" Background="#70232E42" Visibility="{Binding IsAddAccountOpen, Converter={StaticResource BoolVisibility}}">
+            <Border Width="470" Background="White" BorderBrush="#E3E8F0" BorderThickness="1" CornerRadius="20" Padding="30" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <StackPanel><TextBlock Text="添加账号" FontSize="23" FontWeight="SemiBold"/><TextBlock Text="添加登录名称，在 Steam 完成验证。" Foreground="{StaticResource Muted}" TextWrapping="Wrap" LineHeight="22" Margin="0,9,0,25"/>
+                    <TextBlock Text="Steam 登录名称" Style="{StaticResource FieldLabel}"/><TextBox Text="{Binding NewAccountName, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="新账号登录名称" Margin="0,0,0,18"/>
+                    <TextBlock Text="显示名称 · 可选" Style="{StaticResource FieldLabel}"/><TextBox Text="{Binding NewDisplayName, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="新账号显示名称"/>
+                    <TextBlock Text="{Binding AddFormError}" Foreground="#AA4E52" FontSize="12" TextWrapping="Wrap" Margin="0,12,0,0"/>
+                    <Border Background="#F5F8FC" CornerRadius="10" Padding="13" Margin="0,8,0,24"><TextBlock Text="首次使用请在线登录，以保存离线授权。" TextWrapping="Wrap" FontSize="12" Foreground="#61718A" LineHeight="21"/></Border>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"><Button Content="取消" Command="{Binding CloseAddAccountCommand}" Margin="0,0,10,0"/><Button Content="添加账号" Command="{Binding SaveNewAccountCommand}" Style="{StaticResource PrimaryButton}"/></StackPanel>
+                </StackPanel>
+            </Border>
+        </Grid>
+        <Grid Grid.Row="1" Grid.ColumnSpan="2" Background="#70232E42" Visibility="{Binding PendingConfirmation, Converter={StaticResource BoolVisibility}}">
+            <Border Width="470" Background="White" BorderBrush="#E3E8F0" BorderThickness="1" CornerRadius="20" Padding="30" HorizontalAlignment="Center" VerticalAlignment="Center"><StackPanel><TextBlock Text="{Binding ConfirmationTitle}" FontSize="22" FontWeight="SemiBold" TextWrapping="Wrap"/><TextBlock Text="{Binding ConfirmationMessage}" Foreground="#62718A" TextWrapping="Wrap" LineHeight="24" Margin="0,14,0,28"/><StackPanel Orientation="Horizontal" HorizontalAlignment="Right"><Button Content="取消" Command="{Binding CancelConfirmCommand}" Margin="0,0,10,0"/><Button Content="确认" Command="{Binding ConfirmCommand}" Style="{StaticResource PrimaryButton}"/></StackPanel></StackPanel></Border>
+        </Grid>
+        <Grid x:Name="LockOverlay" Grid.Row="1" Grid.ColumnSpan="2" Panel.ZIndex="100" Background="#F5F7FB" Visibility="{Binding IsLocked,Converter={StaticResource BoolVisibility}}" AutomationProperties.Name="应用锁定界面">
+            <Ellipse Width="420" Height="420" Fill="#EAF0FB" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="-120,-70,0,0"/>
+            <Border Width="390" Background="White" BorderBrush="#DEE8F6" BorderThickness="1" CornerRadius="26" Padding="32" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <StackPanel>
+                    <Border Width="60" Height="60" Background="#EAF1FE" CornerRadius="19" HorizontalAlignment="Center"><TextBlock Text="&#xE72E;" Style="{StaticResource Icon}" Foreground="#5780C5" FontSize="28" HorizontalAlignment="Center"/></Border>
+                    <TextBlock Text="Gameorder 已锁定" FontSize="24" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,21,0,0"/>
+                    <TextBlock Text="输入应用密码" FontSize="12" Foreground="#91A1B9" HorizontalAlignment="Center" Margin="0,8,0,24"/>
+                    <Grid x:Name="UnlockInputGroup" RenderTransformOrigin="0.5,0.5">
+                        <Grid.RenderTransform><TranslateTransform/></Grid.RenderTransform>
+                        <Grid.Style><Style TargetType="Grid"><Style.Triggers><DataTrigger Binding="{Binding AppLockChecking}" Value="True"><Setter Property="IsEnabled" Value="False"/></DataTrigger><DataTrigger Binding="{Binding AppLockConfigurationError}" Value="True"><Setter Property="Visibility" Value="Collapsed"/></DataTrigger></Style.Triggers></Style></Grid.Style>
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                        <PasswordBox x:Name="UnlockPassword" KeyDown="UnlockPasswordKeyDown" Style="{StaticResource LockPasswordStyle}" AutomationProperties.Name="应用解锁密码"/>
+                        <TextBox x:Name="UnlockPasswordPlain" Visibility="Collapsed" KeyDown="UnlockPasswordKeyDown" MinHeight="48" Padding="14,12" MaxLength="4096" SpellCheck.IsEnabled="False" AutomationProperties.Name="应用解锁密码，可见"/>
+                        <ToggleButton x:Name="UnlockPasswordReveal" Grid.Column="1" Style="{StaticResource PasswordEye}"/>
+                    </Grid>
+                    <Border x:Name="UnlockErrorBanner" Background="#FFF0F2" BorderBrush="#F2D2D8" BorderThickness="1" CornerRadius="12" Padding="12,11" Margin="0,12,0,0" Visibility="{Binding HasAppLockMessage,Converter={StaticResource BoolVisibility}}" AutomationProperties.LiveSetting="Assertive">
+                        <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="22"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions><TextBlock Text="&#xEA39;" FontFamily="Segoe MDL2 Assets" Foreground="#BC485A" FontSize="16" VerticalAlignment="Center"/><TextBlock x:Name="UnlockErrorText" Grid.Column="1" Text="{Binding AppLockMessage}" Foreground="#B34454" FontSize="14" FontWeight="SemiBold" TextWrapping="Wrap" VerticalAlignment="Center"/></Grid>
+                    </Border>
+                    <Border x:Name="PasswordHintBanner" Background="#F3F6FC" CornerRadius="12" Padding="13,11" Margin="0,9,0,0" Visibility="{Binding ShowPasswordHint,Converter={StaticResource BoolVisibility}}" AutomationProperties.LiveSetting="Polite">
+                        <StackPanel><StackPanel Orientation="Horizontal"><TextBlock Text="&#xE897;" FontFamily="Segoe MDL2 Assets" Foreground="#7891B3" FontSize="13" Margin="0,0,6,0"/><TextBlock Text="密码提示" Foreground="#7891B3" FontSize="11"/></StackPanel><TextBlock x:Name="PasswordHintText" Text="{Binding CurrentPasswordHint}" TextWrapping="Wrap" Foreground="#526A8C" FontSize="14" Margin="0,6,0,0"/></StackPanel>
+                    </Border>
+                    <Button Click="UnlockClick" Margin="0,14,0,0" AutomationProperties.Name="解锁 Gameorder"><Button.Style><Style TargetType="Button" BasedOn="{StaticResource PrimaryButton}"><Style.Triggers><DataTrigger Binding="{Binding AppLockChecking}" Value="True"><Setter Property="IsEnabled" Value="False"/></DataTrigger><DataTrigger Binding="{Binding AppLockConfigurationError}" Value="True"><Setter Property="Visibility" Value="Collapsed"/></DataTrigger></Style.Triggers></Style></Button.Style><StackPanel Orientation="Horizontal"><TextBlock Text="&#xE785;" Style="{StaticResource Icon}" FontSize="14" Margin="0,0,8,0"/><TextBlock Text="解锁"/></StackPanel></Button>
+                    <Button Command="{Binding ForgotPasswordCommand}" Content="忘记密码" Style="{StaticResource QuietButton}" Margin="0,12,0,0" ToolTip="清空本机账号资料后重置，无法恢复" AutomationProperties.Name="忘记密码并清空资料"/>
+                    <TextBlock Text="测试密码：12345678" FontSize="12" Foreground="#A5762B" TextAlignment="Center" Margin="0,12,0,0" Visibility="{Binding IsResetTest,Converter={StaticResource BoolVisibility}}"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>

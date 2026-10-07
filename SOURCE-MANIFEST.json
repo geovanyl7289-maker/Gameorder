@@ -1,0 +1,203 @@
+{
+  "version": "1.9.1",
+  "license": "GPL-3.0-only",
+  "author": "XIAOYING223",
+  "date": "2026-10-07",
+  "release_executable_sha256": "98341fa1d6deb030eeb99aa34567ed4197de21de296f80d62e2f4c022fb9a29a",
+  "source_hash_format": "SHA-256 of Git blobs; text files use repository LF line endings.",
+  "independent_reproducible_build_attestation": false,
+  "source_files": [
+    {
+      "path": "src/AboutInfo.cs",
+      "sha256": "1767b80f78fb7b0d22fd28e6a44f313863f4125f501f64421036a56690b75656"
+    },
+    {
+      "path": "src/app.manifest",
+      "sha256": "5c4cf68a3b11c704791404660cb558bc74fc5a4b2303c0436b05219c3c7d8117"
+    },
+    {
+      "path": "src/App.xaml",
+      "sha256": "17a5ffe361b1ab557d5bee6a4464d55bee5dc93b0909950e4d005928d31eafd7"
+    },
+    {
+      "path": "src/App.xaml.cs",
+      "sha256": "e85a3086065cd6caa1ff0f8f884744c76ebf53e7a99bf776ea2c3dd1ea914e93"
+    },
+    {
+      "path": "src/AppLockDialog.xaml",
+      "sha256": "918a7902b9e8c235d49f9283b3b49de8587b14337cce7912c1aa03d9d63b3fcd"
+    },
+    {
+      "path": "src/AppLockDialog.xaml.cs",
+      "sha256": "f3850a1380c55b213c9349695157d3a33d3eb8306fde4c6163418dc71920a659"
+    },
+    {
+      "path": "src/AppLockService.cs",
+      "sha256": "f0f9f12d575efc2768b6f0485fef4ab3d90c699b9b278a08f971b7eed8c33ad9"
+    },
+    {
+      "path": "src/assets/CreatorAvatar.png",
+      "sha256": "8c15dfdc8e51841328816a6b159fb459a4e59e9ed0ca153ba38c66e934722c0b"
+    },
+    {
+      "path": "src/assets/Gameorder.ico",
+      "sha256": "ae91393dc049d8d54c8a3be8360b609c503369042368c7c34c937e17d7f29219"
+    },
+    {
+      "path": "src/assets/Gameorder.png",
+      "sha256": "7599828b16cda1a9c1d5dfcf69ff204200e90805c5218230837482ca210b1ee0"
+    },
+    {
+      "path": "src/AvatarImageConverter.cs",
+      "sha256": "1ab2883502e267e59c5c77f7cd178563f16e3f492778b70b136560c29604da3c"
+    },
+    {
+      "path": "src/AvatarService.cs",
+      "sha256": "b6e37c89ddd013951916784be1cdd0e028bd3d6f7d2efa68557c9fcc90c67062"
+    },
+    {
+      "path": "src/Commands.cs",
+      "sha256": "d1f186fca53ad2760605d9b4ace89964b521df401b59523dd6fc0ab561ee2194"
+    },
+    {
+      "path": "src/EncryptedLocalFile.cs",
+      "sha256": "709b59979e82bd47a7bd918ff98fe5d930bbc157fa6828e34cce8edda02eac1a"
+    },
+    {
+      "path": "src/ForgotPasswordDialog.xaml",
+      "sha256": "f891698223ad91ff4da9a79f57a3cb931dc93b25550d7feb2e8a67e88c5ff77a"
+    },
+    {
+      "path": "src/ForgotPasswordDialog.xaml.cs",
+      "sha256": "ccc512c18777a15b36b13c6a5002f1a2ecf4b683676497ddcd1658abeb84ebd4"
+    },
+    {
+      "path": "src/ForgotPasswordFlow.cs",
+      "sha256": "8e1dff29567586484857be596208ecf3525af1a05052887c8b4fe28a03a826fd"
+    },
+    {
+      "path": "src/GameBackgroundPolicy.cs",
+      "sha256": "bceb21a90a6704bb76831399d0cc26b0781dc7cfd0e4da625f67341cd6f8b890"
+    },
+    {
+      "path": "src/Gameorder.csproj",
+      "sha256": "df3ed728d8fa653036247927c676c13d234132a5ba2abfd74f1a5ed6f8d868a4"
+    },
+    {
+      "path": "src/GameorderDataContext.cs",
+      "sha256": "44c15bbac749d12b80a5885b8affe380cf30ad0977c390666cfc716fe037655b"
+    },
+    {
+      "path": "src/GlobalUsings.cs",
+      "sha256": "9eb56b713f4bd450c169f140e74ff7b6d5e456f3742a30188b947223d01628e4"
+    },
+    {
+      "path": "src/InstanceMessageService.cs",
+      "sha256": "daf30d48ff2a00a382618dd6f0abfe959d0dbdf112428915036ff9c6dce0b0a4"
+    },
+    {
+      "path": "src/LocalStore.cs",
+      "sha256": "6c44528eac9f860b116c8db3f7c731d096e13ba9ac7a067df1941ef72130b7af"
+    },
+    {
+      "path": "src/MainViewModel.cs",
+      "sha256": "874280bf06d633eb622d9f7d8d815ee87362cc0516059711b9f22b27dac1f51b"
+    },
+    {
+      "path": "src/MainWindow.xaml",
+      "sha256": "f5f76e556d84cc7ccf8612ce0cbeb8591f68107c4d162948c4b145e5157bd719"
+    },
+    {
+      "path": "src/MainWindow.xaml.cs",
+      "sha256": "3cfe2a8c8abd6291b18fe0d86897488d7b6e14c3e138cdcf418d54f201464998"
+    },
+    {
+      "path": "src/Models.cs",
+      "sha256": "219bf37bb06394bf09d9b5d7f46ccce6fe937a580f992e5a66afa73cbe246e23"
+    },
+    {
+      "path": "src/OperationLogService.cs",
+      "sha256": "6a3a29c0c60087ed145c7853f98ad7b88611a7630e2b20e0e394861850f8bc9a"
+    },
+    {
+      "path": "src/PasswordRevealController.cs",
+      "sha256": "dd0d40156e33fa4dc784b5e579d8a0f5965f91f519c8c28ac8772742ae2966e2"
+    },
+    {
+      "path": "src/ProcessEfficiencyService.cs",
+      "sha256": "7f48ee1cffbc85d7b9a31830c0083f95a8b7d6b0b9a29efe972212dd9a2f79ea"
+    },
+    {
+      "path": "src/QuickAccountWindow.xaml",
+      "sha256": "206a977ed10cebd5777eef6023dc1c081f933fe96e2fbda51452ad14b95e9e25"
+    },
+    {
+      "path": "src/QuickAccountWindow.xaml.cs",
+      "sha256": "b4f84596ff00c63768bfa4670342a7a01cbe7b9accf0220fbec7073f96061c0e"
+    },
+    {
+      "path": "src/ResetTestAvatarFactory.cs",
+      "sha256": "924b060d6e23710e17ddbdd9cd5716efc0cbca45f846a695f0107a847236898e"
+    },
+    {
+      "path": "src/ResetTestProof.cs",
+      "sha256": "40d61f6d02a3f369882b6a49bf58dc337ef3f8c4a9e7b8bd26a4c24fbfe038b6"
+    },
+    {
+      "path": "src/ResetTestWidgetPreview.cs",
+      "sha256": "f6e8fb6a01d2477b791d0e673a6ca84638b1b9af61f461b24ef4ac7398f5bba4"
+    },
+    {
+      "path": "src/ShellIdentity.cs",
+      "sha256": "881e73f18883a4c84f394b3e3a5c3057e52415247f30e932d8c47124e0ca5a12"
+    },
+    {
+      "path": "src/SteamGameService.cs",
+      "sha256": "bf934132b4b4942222ad20b8ee3af7e6da82ea0946f0b7c28991045d531ae9a1"
+    },
+    {
+      "path": "src/SteamService.cs",
+      "sha256": "d94dd9b9a104cf5b9ff0eab046e241bfef31f269da826bbff207dd0278edf0ba"
+    },
+    {
+      "path": "src/SteamSessionService.cs",
+      "sha256": "906223fb9dfaf693959a430415df706c9086e18bbe3cd88f4704f76e5424e8ad"
+    },
+    {
+      "path": "src/TaskbarAccountWidget.xaml",
+      "sha256": "d1ed122997c737e74338d68a8b1677d6b61073550411e53d4035662c4077897c"
+    },
+    {
+      "path": "src/TaskbarAccountWidget.xaml.cs",
+      "sha256": "9190e8d1d2180c50fa00d587b74f2c8b9a42822f0983cb0ef702edbdae98405f"
+    },
+    {
+      "path": "src/TaskbarDockHint.cs",
+      "sha256": "1cb0241cc93ecf34ad4bd894fb13b01f4d68de9b8f0ac4f568659122cfdd9242"
+    },
+    {
+      "path": "src/TaskbarWidgetDockLayout.cs",
+      "sha256": "7ff909406fcf987808ffc0a24f550f07624bd4360a81c400585e482ef623d110"
+    },
+    {
+      "path": "src/TaskbarWidgetHost.cs",
+      "sha256": "da6f53360e6db29835b021b3d6ee6019fd0321813f0ae3bde6c6d239cd8fb973"
+    },
+    {
+      "path": "src/TaskbarWidgetViewModel.cs",
+      "sha256": "ca57f90d978b35ae41469a9486f87eca4c954a88dc2a67e93d5e413cd2f581f9"
+    },
+    {
+      "path": "src/TrayService.cs",
+      "sha256": "550964fed491217fc1432be7310dc9e258636e70862d8e507ce969371f4825fe"
+    },
+    {
+      "path": "src/UiVerification.cs",
+      "sha256": "2290eb620e6411c1a8abeba7254b152363dc279fe18201176d60e7710f8a5eb7"
+    },
+    {
+      "path": "src/ValveKeyValues.cs",
+      "sha256": "f9f16307b0fab618df5b3a288b17de300ba6f56b1e521f6b2cf4dc022c40ff68"
+    }
+  ]
+}

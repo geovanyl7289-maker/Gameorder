@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net9.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>Gameorder</AssemblyName>
+    <RootNamespace>Gameorder</RootNamespace>
+    <Version>1.9.1</Version>
+    <Product>Gameorder</Product>
+    <Description>本地 Steam 账号管理与在线、离线启动工具</Description>
+    <Company>XIAOYING223</Company>
+    <Authors>XIAOYING223</Authors>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>assets/Gameorder.ico</ApplicationIcon>
+    <DefineConstants Condition="'$(ResetTestBuild)' == 'true'">$(DefineConstants);RESET_TEST_BUILD</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Using Remove="System.Windows.Forms" />
+    <Using Remove="System.Drawing" />
+    <Resource Include="assets/Gameorder.ico" />
+    <Resource Include="assets/Gameorder.png" />
+    <Resource Include="assets/CreatorAvatar.png" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,222 @@
+using System.Buffers.Binary;
+using System.Security.Cryptography;
+using System.Text;
+using System.Text.Json;
+using Gameorder;
+
+const string Marker = "Synthetic-Secret-Note-7e6370-中文🎮";
+if (!OperatingSystem.IsWindows()) throw new PlatformNotSupportedException("These fixtures require actual Windows CurrentUser DPAPI.");
+if (args.Length == 2 && args[0] == "--file-status")
+{
+    // Header-only read: no configuration, password attempt, JSON deserialization, or migration.
+    var data = EncryptedLocalFile.ReadIfExists(Path.GetFullPath(args[1])) ?? throw new IOException("Requested file does not exist.");
+    try
+    {
+        bool password = EncryptedLocalFile.HasPasswordMagic(data), dpapi = EncryptedLocalFile.HasEncryptedMagic(data);
+        Console.WriteLine(JsonSerializer.Serialize(new { envelopeRecognized = password || dpapi, passwordProtected = password,
+            dpapiProtected = dpapi, version = (password || dpapi) && data.Length >= 12 ? BinaryPrimitives.ReadUInt32LittleEndian(data.AsSpan(8,4)) : 0,
+            bytes = data.Length, ciphertextSha256 = Convert.ToHexString(SHA256.HashData(data)) }));
+    }
+    finally { CryptographicOperations.ZeroMemory(data); }
+    return;
+}
+if (args.Length == 2 && args[0] == "--live-status")
+{
+    // Explicit, read-only status mode; never migrates and never serializes account values into the report.
+    var encrypted = EncryptedLocalFile.ReadIfExists(Path.GetFullPath(args[1])) ?? throw new IOException("Requested file does not exist.");
+    byte[]? plain = null;
+    try
+    {
+        if (EncryptedLocalFile.HasPasswordMagic(encrypted)) throw new InvalidDataException("Password-bound files support header-only --file-status; this mode does not accept passwords.");
+        plain = EncryptedLocalFile.Decrypt(encrypted);
+        var state = JsonSerializer.Deserialize<LocalState>(plain) ?? throw new InvalidDataException();
+        Console.WriteLine(JsonSerializer.Serialize(new { encrypted = true, accounts = state.Accounts.Count, folders = state.Folders.Count,
+            records = state.Activity.Count, hiddenAccounts = state.HiddenAccounts.Count, plaintextSha256 = Convert.ToHexString(SHA256.HashData(plain)) }));
+    }
+    finally { CryptographicOperations.ZeroMemory(encrypted); if (plain is not null) CryptographicOperations.ZeroMemory(plain); }
+    return;
+}
+if (args.Length != 0) throw new ArgumentException("Use no arguments for isolated synthetic tests; --file-status <explicit-path> reads an envelope header; --live-status <explicit-path> reads DPAPI-only counters/hash.");
+
+var checks = new List<object>();
+var tests = new List<(string Name, Action Run)>
+{
+    ("new save is encrypted and keeps unicode, folders, account flags and activity", () =>
+    {
+        using var f = new Fixture(); var state = State(); var store = new LocalStore(false, f.Path);
+        Check(store.CanSave && !store.IsEncrypted, "new status"); store.Save(state);
+        Check(store.IsEncrypted && store.CanSave, "saved status"); CipherOnly(f);
+        var reader = new LocalStore(false, f.Path); var loaded = reader.Load(); SameState(state, loaded);
+        Check(reader.IsEncrypted && !reader.WasMigrated && reader.LoadError is null, "read status");
+    }),
+    ("legacy migration parses then preserves exact UTF8 JSON and unknown fields", () =>
+    {
+        using var f = new Fixture(); var legacy = Legacy(); File.WriteAllBytes(f.Path, legacy); var hash = SHA256.HashData(legacy);
+        var store = new LocalStore(false, f.Path); var loaded = store.Load(); SameState(State(), loaded);
+        Check(store.WasMigrated && store.IsEncrypted && store.LoadError is null, "migration status");
+        var restored = EncryptedLocalFile.Decrypt(File.ReadAllBytes(f.Path));
+        try { Check(hash.SequenceEqual(SHA256.HashData(restored)), "migration altered original JSON"); }
+        finally { CryptographicOperations.ZeroMemory(restored); CryptographicOperations.ZeroMemory(legacy); }
+        CipherOnly(f); Check(new LocalStore(false, f.Path).Load().Accounts[0].Note == Marker, "migration roundtrip");
+    }),
+    ("UTF8 BOM legacy migration", () => EncodingMigration(new UTF8Encoding(true))),
+    ("UTF16 LE BOM legacy migration", () => EncodingMigration(new UnicodeEncoding(false, true, true))),
+    ("UTF16 BE BOM legacy migration", () => EncodingMigration(new UnicodeEncoding(true, true, true))),
+    ("ciphertext tamper is fail closed and original bytes survive", () => Damaged(bytes => bytes[^8] ^= 0x40)),
+    ("unsupported envelope version is fail closed", () => Damaged(bytes => BinaryPrimitives.WriteUInt32LittleEndian(bytes.AsSpan(8,4),2))),
+    ("incorrect ciphertext length is fail closed", () => Damaged(bytes => BinaryPrimitives.WriteInt32LittleEndian(bytes.AsSpan(12,4),1))),
+    ("wrong magic cannot fall back to an empty valid JSON file", () => Damaged(bytes => bytes[0] = (byte)'X')),
+    ("truncated encrypted input is fail closed", () =>
+    {
+        using var f = new Fixture(); new LocalStore(false, f.Path).Save(State()); var bytes = File.ReadAllBytes(f.Path)[..10];
+        File.WriteAllBytes(f.Path, bytes); FailsClosed(f, bytes);
+    }),
+    ("unavailable DPAPI key or damaged blob fails without overwriting", () =>
+    {
+        using var f = new Fixture(); var data = new byte[256]; "GORDERLD"u8.CopyTo(data);
+        BinaryPrimitives.WriteUInt32LittleEndian(data.AsSpan(8,4),1); BinaryPrimitives.WriteInt32LittleEndian(data.AsSpan(12,4),240);
+        RandomNumberGenerator.Fill(data.AsSpan(16)); File.WriteAllBytes(f.Path,data); FailsClosed(f,data);
+    }),
+    ("other-purpose current-user DPAPI blob cannot impersonate local state", () =>
+    {
+        using var f = new Fixture(); var bytes = Encoding.UTF8.GetBytes("{\"Accounts\":[]}");
+        var cipher = WindowsDataProtection.Protect(bytes); CryptographicOperations.ZeroMemory(bytes);
+        var data = new byte[16+cipher.Length]; "GORDERLD"u8.CopyTo(data); BinaryPrimitives.WriteUInt32LittleEndian(data.AsSpan(8,4),1);
+        BinaryPrimitives.WriteInt32LittleEndian(data.AsSpan(12,4),cipher.Length); cipher.CopyTo(data,16); File.WriteAllBytes(f.Path,data); FailsClosed(f,data);
+    }),
+    ("malformed legacy JSON remains byte-exact and cannot save", () => InvalidLegacy("{\"Accounts\":[broken")),
+    ("fully parsed JSON with invalid account fields is not migrated", () => InvalidLegacy("{\"Accounts\":[{\"AccountName\":\"demo\",\"Note\":null}]}")),
+    ("null activity entry is rejected before migration", () => InvalidLegacy("{\"Activity\":[null]}")),
+    ("trailing JSON is rejected before migration", () => InvalidLegacy("{} {}")),
+    ("empty existing file is preserved rather than treated as a new store", () =>
+    { using var f = new Fixture(); File.WriteAllBytes(f.Path,[]); FailsClosed(f,[]); }),
+    ("migration commit lock preserves old JSON and parsed read-only state", () =>
+    {
+        using var f = new Fixture(); var original = Legacy(); File.WriteAllBytes(f.Path, original); var store = new LocalStore(false,f.Path);
+        using (var locked = new FileStream(f.Path,FileMode.Open,FileAccess.Read,FileShare.Read))
+        { var loaded = store.Load(); SameState(State(),loaded); Check(store.LoadError is not null && !store.CanSave && !store.IsEncrypted && !store.WasMigrated,"migration failure status"); }
+        Check(original.SequenceEqual(File.ReadAllBytes(f.Path)),"migration replaced locked file"); Throws<IOException>(() => store.Save(State()));
+        Check(!Directory.EnumerateFiles(f.Root,"*.tmp").Any(),"migration left temp");
+    }),
+    ("failed commit temp contains only ciphertext and is removed", () =>
+    {
+        using var f = new Fixture(); var original = Legacy(); File.WriteAllBytes(f.Path,original); var encrypted = EncryptedLocalFile.Encrypt(original); var observed = false;
+        Throws<IOException>(() => EncryptedLocalFile.WriteAtomically(f.Path,encrypted,SHA256.HashData(original),temporary =>
+        { var data = File.ReadAllBytes(temporary); Check(EncryptedLocalFile.HasEncryptedMagic(data),"plaintext temp"); Check(!Contains(data,Marker),"secret in temp"); observed = true; throw new IOException("synthetic commit failure"); }));
+        Check(observed,"temp boundary not observed"); Check(original.SequenceEqual(File.ReadAllBytes(f.Path)),"commit failure replaced original");
+        Check(!Directory.EnumerateFiles(f.Root,"*.tmp").Any(),"commit failure temp survived");
+    }),
+    ("locked encrypted save leaves old bytes and can retry after unlock", () =>
+    {
+        using var f = new Fixture(); var store = new LocalStore(false,f.Path); store.Save(State()); var original = File.ReadAllBytes(f.Path);
+        using (var locked = new FileStream(f.Path,FileMode.Open,FileAccess.Read,FileShare.Read)) Throws<IOException>(() => store.Save(State("updated")));
+        Check(original.SequenceEqual(File.ReadAllBytes(f.Path)),"locked save replaced old bytes"); store.Save(State("updated")); CipherOnly(f);
+        Check(new LocalStore(false,f.Path).Load().Accounts[0].Note == "updated", "retry lost edit");
+    }),
+    ("save-before-load cannot overwrite a corrupted existing store", () =>
+    { using var f = new Fixture(); var bytes = Encoding.UTF8.GetBytes("broken"); File.WriteAllBytes(f.Path,bytes); var store = new LocalStore(false,f.Path); Throws<IOException>(() => store.Save(State())); Check(bytes.SequenceEqual(File.ReadAllBytes(f.Path)),"unchecked save overwrote original"); }),
+    ("external replacement after load blocks subsequent save", () =>
+    {
+        using var f = new Fixture(); var store = new LocalStore(false,f.Path); store.Save(State()); new LocalStore(false,f.Path).Save(State("external edit"));
+        var original = File.ReadAllBytes(f.Path); Throws<IOException>(() => store.Save(State("stale edit"))); Check(!store.CanSave,"changed file was not latched");
+        Check(original.SequenceEqual(File.ReadAllBytes(f.Path)),"stale save replaced external edit");
+    }),
+    ("oversized legacy and ciphertext inputs are preserved", () =>
+    {
+        using var f = new Fixture(); var bytes = new byte[EncryptedLocalFile.MaximumFileBytes+1]; Array.Fill(bytes,(byte)'x'); File.WriteAllBytes(f.Path,bytes); FailsClosed(f,bytes);
+    }),
+    ("oversized save cannot replace a valid encrypted store", () =>
+    {
+        using var f = new Fixture(); var store = new LocalStore(false,f.Path); store.Save(State()); var original = File.ReadAllBytes(f.Path);
+        Throws<InvalidDataException>(() => store.Save(State(new string('x',EncryptedLocalFile.MaximumPlaintextBytes+1))));
+        Check(original.SequenceEqual(File.ReadAllBytes(f.Path)),"oversized save replaced old file"); Check(!Directory.EnumerateFiles(f.Root,"*.tmp").Any(),"oversized save left temp");
+    }),
+    ("demo never reads, migrates, creates or overwrites real-path canary", () =>
+    {
+        using var f = new Fixture(); var original = Legacy(); File.WriteAllBytes(f.Path,original); var demo = new LocalStore(true,f.Path);
+        Check(demo.Load().Accounts.Count==0 && demo.LoadError is null && !demo.IsEncrypted && !demo.CanSave,"demo read storage"); demo.Save(State());
+        Check(original.SequenceEqual(File.ReadAllBytes(f.Path)),"demo changed canary"); var missing = Path.Combine(f.Root,"missing.json"); new LocalStore(true,missing).Save(State());
+        Check(!File.Exists(missing),"demo created file"); Check(Directory.EnumerateFiles(f.Root).Count()==1,"demo left artifacts");
+    }),
+    ("repeated loads and saves never create plaintext temp or backup files", () =>
+    {
+        using var f = new Fixture(); var store = new LocalStore(false,f.Path); for(var i=0;i<8;i++) { store.Save(State()); SameState(State(),store.Load()); CipherOnly(f); }
+        Check(Directory.EnumerateFiles(f.Root).Count()==1,"unexpected backup/temp file");
+    })
+};
+tests.AddRange(PasswordStorageTests.Tests);
+tests.AddRange(PasswordHintTests.Tests);
+foreach(var test in tests)
+{
+    try { test.Run(); checks.Add(new { name=test.Name,passed=true }); Console.WriteLine("PASS "+test.Name); }
+    catch(Exception ex) { checks.Add(new { name=test.Name,passed=false,error=ex.GetType().Name,message=ex.Message }); Console.WriteLine("FAIL "+test.Name+": "+ex.GetType().Name+" "+ex.Message); }
+}
+var verification = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory,"../../../../../verification/security-storage.json"));
+Directory.CreateDirectory(Path.GetDirectoryName(verification)!);
+var passed = checks.Count(c => JsonSerializer.Serialize(c).Contains("\"passed\":true",StringComparison.Ordinal));
+File.WriteAllText(verification,JsonSerializer.Serialize(new { actualWindowsCurrentUserDpapi=true,passwordBoundAesGcm=true,destructiveResetScope="marked synthetic test roots only",scope="isolated synthetic files only",checks=tests.Count,passed,failed=tests.Count-passed,
+    foreignWindowsUserExecuted=false,note="Unavailable-key/tampered-blob errors exercise the same fail-closed path; no other Windows user was created or used.",results=checks },new JsonSerializerOptions { WriteIndented=true }));
+Console.WriteLine($"{passed}/{tests.Count} passed; report {verification}");
+Environment.ExitCode = passed==tests.Count ? 0 : 1;
+
+static LocalState State(string? note=null)
+{
+    const string id="798288e3-6d83-44c0-8cce-1e09c0ee6d4f";
+    return new() { SteamPath="C:\\SyntheticSteam",TaskbarWidgetEnabled=false,TaskbarWidgetDock="left",
+        Accounts=[new() { AccountName="synthetic_alpha",DisplayName="演示玩家 🎮",Note=note??Marker,IsFavorite=true,IsManual=true,FolderId=id }],
+        Folders=[new() { Id=id,Name="主账号" }],HiddenAccounts=["synthetic_hidden"],
+        Activity=[new() { Title="演示记录",Description="Synthetic-History-详情",Kind="success",Category="account",Time=DateTimeOffset.FromUnixTimeSeconds(1700000000) }] };
+}
+static byte[] Legacy()
+{
+    var plain = JsonSerializer.Serialize(State());
+    return Encoding.UTF8.GetBytes(plain[..^1]+",\"FutureMetadata\":\"preserve-me\"}");
+}
+static void SameState(LocalState expected,LocalState actual)
+{
+    Check(expected.SteamPath==actual.SteamPath && expected.TaskbarWidgetEnabled==actual.TaskbarWidgetEnabled && expected.TaskbarWidgetDock==actual.TaskbarWidgetDock,"preferences lost");
+    Check(expected.Accounts.Count==actual.Accounts.Count && expected.Accounts[0].Note==actual.Accounts[0].Note && expected.Accounts[0].DisplayName==actual.Accounts[0].DisplayName
+        && actual.Accounts[0].IsManual && actual.Accounts[0].IsFavorite && expected.Accounts[0].FolderId==actual.Accounts[0].FolderId,"metadata lost");
+    Check(actual.Folders[0].Name==expected.Folders[0].Name && actual.HiddenAccounts.SequenceEqual(expected.HiddenAccounts),"groups/hidden lost");
+    Check(actual.Activity[0].Title==expected.Activity[0].Title && actual.Activity[0].Description==expected.Activity[0].Description
+        && actual.Activity[0].Time==expected.Activity[0].Time && actual.Activity[0].Kind==expected.Activity[0].Kind && actual.Activity[0].Category==expected.Activity[0].Category,"activity lost");
+}
+static void CipherOnly(Fixture f)
+{
+    foreach(var file in Directory.EnumerateFiles(f.Root))
+    { var bytes=File.ReadAllBytes(file); Check(EncryptedLocalFile.HasEncryptedMagic(bytes),"unexpected unencrypted file"); Check(!Contains(bytes,Marker)&&!Contains(bytes,"synthetic_alpha")&&!Contains(bytes,"Synthetic-History"),"plaintext found on disk"); }
+}
+static bool Contains(byte[] bytes,string value) => bytes.AsSpan().IndexOf(Encoding.UTF8.GetBytes(value))>=0 || bytes.AsSpan().IndexOf(Encoding.Unicode.GetBytes(value))>=0;
+static void FailsClosed(Fixture f,byte[] original)
+{
+    var store=new LocalStore(false,f.Path); Check(store.Load().Accounts.Count==0 && store.LoadError is not null && !store.CanSave,"failure not reported");
+    Throws<IOException>(()=>store.Save(State())); Check(original.SequenceEqual(File.ReadAllBytes(f.Path)),"original overwritten");
+    Check(!Directory.EnumerateFiles(f.Root,"*.tmp").Any(),"failure left temp");
+}
+static void Damaged(Action<byte[]> mutate)
+{ using var f=new Fixture(); new LocalStore(false,f.Path).Save(State()); var bytes=File.ReadAllBytes(f.Path); mutate(bytes); File.WriteAllBytes(f.Path,bytes); FailsClosed(f,bytes); }
+static void InvalidLegacy(string json)
+{ using var f=new Fixture(); var bytes=Encoding.UTF8.GetBytes(json); File.WriteAllBytes(f.Path,bytes); FailsClosed(f,bytes); }
+static void EncodingMigration(Encoding encoding)
+{
+    using var f=new Fixture(); var text=Encoding.UTF8.GetString(Legacy()); var bytes=encoding.GetPreamble().Concat(encoding.GetBytes(text)).ToArray(); File.WriteAllBytes(f.Path,bytes);
+    var store=new LocalStore(false,f.Path); SameState(State(),store.Load()); Check(store.WasMigrated && store.IsEncrypted,"encoding migration failed"); CipherOnly(f);
+}
+static void Check(bool condition,string message) { if(!condition) throw new Exception(message); }
+static void Throws<T>(Action action) where T:Exception
+{ try { action(); } catch(T) { return; } throw new Exception("Expected "+typeof(T).Name); }
+
+sealed class Fixture : IDisposable
+{
+    private static readonly string FixtureParent=System.IO.Path.GetFullPath(System.IO.Path.Combine(AppContext.BaseDirectory,"fixtures"));
+    public string Root { get; }=System.IO.Path.Combine(FixtureParent,Guid.NewGuid().ToString("N"));
+    public string Path => System.IO.Path.Combine(Root,"accounts.json");
+    public Fixture()=>Directory.CreateDirectory(Root);
+    public void Dispose()
+    {
+        var resolved=System.IO.Path.GetFullPath(Root);
+        if(!resolved.StartsWith(FixtureParent+System.IO.Path.DirectorySeparatorChar,StringComparison.OrdinalIgnoreCase)
+            || !Guid.TryParseExact(System.IO.Path.GetFileName(resolved),"N",out _)) throw new IOException("Unsafe fixture cleanup path");
+        Directory.Delete(resolved,true);
+    }
+}
